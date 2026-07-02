@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chikkundo - Find Your Perfect Mid</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Demo Controls Panel (Left side on desktop, toggleable drawer on mobile) -->
+    <div class="demo-controls" id="demoControls">
+        <div class="demo-header">
+            <h3>Simulator Panel</h3>
+            <button class="demo-toggle-btn" id="closeDemoControls" aria-label="Close panel">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <p class="demo-desc">Quick-jump to inspect any screen layout:</p>
+        <div class="demo-buttons">
+            <button class="demo-btn active" data-screen="screen-landing"><span class="badge">1</span> Landing Page</button>
+            <button class="demo-btn" data-screen="screen-signup"><span class="badge">2</span> Signup Form</button>
+            <button class="demo-btn" data-screen="screen-verification"><span class="badge">3</span> OTP Verification</button>
+            <button class="demo-btn" data-screen="screen-setup"><span class="badge">4</span> Profile Setup</button>
+            <button class="demo-btn" data-screen="screen-home"><span class="badge">5</span> Home (Suggestions)</button>
+            <button class="demo-btn" data-screen="screen-profile-detail"><span class="badge">6</span> Profile Details</button>
+            <button class="demo-btn" data-screen="screen-requests"><span class="badge">8</span> Connect Requests</button>
+            <button class="demo-btn" data-screen="screen-chat"><span class="badge">9</span> Chat Window</button>
+            <button class="demo-btn" data-screen="screen-settings"><span class="badge">10</span> Settings</button>
+        </div>
+        <div class="demo-footer">
+            <p>Note: Screen 7 (Connect Modal) can be opened by clicking "Connect" on a profile detail page.</p>
+        </div>
+    </div>
+
+    <!-- Toggle panel button (mobile-only/floating) -->
+    <button class="demo-float-btn" id="openDemoControls" aria-label="Open simulator control panel">
+        <i data-lucide="sliders"></i>
+    </button>
+
+    <!-- Main Container simulating a premium mobile device shell -->
+    <div class="device-wrapper">
+        <div class="phone-case">
+            <div class="notch"></div>
+            <div class="phone-screen">
+                
+                <!-- Status Bar Emulator -->
+                <div class="status-bar">
+                    <span class="status-time" id="statusTime">10:42 PM</span>
+                    <div class="status-icons">
+                        <i data-lucide="signal" class="status-icon"></i>
+                        <i data-lucide="wifi" class="status-icon"></i>
+                        <i data-lucide="battery" class="status-icon"></i>
+                    </div>
+                </div>
+
+                <!-- App Screens Container -->
+                <div class="app-container">
+
+                    <!-- =======================================
+                         SCREEN 1: LANDING PAGE
+                         ======================================= -->
+                    <section class="screen active" id="screen-landing">
+                        <div class="landing-content">
+                            <div class="hero-brand">
+                                <div class="logo-container">
+                                    <img src="images/logo.png" alt="Chikkundo Logo" class="brand-logo" onerror="this.src='https://placehold.co/120x120/8b5cf6/ffffff?text=C';">
+                                </div>
+                                <h1 class="brand-title">Chikkundo</h1>
+                                <p class="brand-tagline">Find Your Perfect Mid.</p>
+                            </div>
+
+                            <p class="brand-statement">
+                                Love isn't always a cinematic masterpiece, and friendship isn't always extreme. Ditch the pressure. Connect with someone who matches your real vibe, your daily routine, and your level of 'mid'. 
+                            </p>
+
+                            <div class="landing-actions">
+                                <button class="btn btn-primary" onclick="navigateTo('screen-signup')">Get Started</button>
+                                <button class="btn btn-secondary" onclick="navigateTo('screen-home')">Login (Demo)</button>
+                            </div>
+
+                            <!-- Small Feature Cards -->
+                            <div class="features-carousel">
+                                <div class="feature-card">
+                                    <div class="feature-icon"><i data-lucide="shield-check"></i></div>
+                                    <div class="feature-info">
+                                        <h4>Trusted Users</h4>
+                                        <p>Every profile is verification checked with an explicit Trust Badge rating.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon"><i data-lucide="sparkles"></i></div>
+                                    <div class="feature-info">
+                                        <h4>Curated Feed</h4>
+                                        <p>No infinite swiping. Get 15-20 hand-picked suggestions tailored daily.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon"><i data-lucide="send"></i></div>
+                                    <div class="feature-info">
+                                        <h4>Connect Requests</h4>
+                                        <p>Send direct requests indicating exactly why you want to connect.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                    <!-- =======================================
+                         SCREEN 2: SIGNUP FORM
+                         ======================================= -->
+                    <section class="screen" id="screen-signup">
+                        <div class="screen-header">
+                            <button class="back-btn" onclick="navigateTo('screen-landing')">
+                                <i data-lucide="chevron-left"></i>
+                            </button>
+                            <h2>Create Account</h2>
+                            <div class="header-placeholder"></div>
+                        </div>
+                        
+                        <div class="screen-scrollable">
+                            <form id="signupForm" class="auth-form" onsubmit="handleSignup(event)">
+                                <div class="form-group">
+                                    <label for="fullName">Full Name</label>
+                                    <div class="input-wrapper">
+                                        <i data-lucide="user"></i>
+                                        <input type="text" id="fullName" placeholder="Enter full name" required autocomplete="name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <div class="input-wrapper">
+                                        <i data-lucide="at-sign"></i>
+                                        <input type="text" id="username" placeholder="Choose a username" required autocomplete="username">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <div class="input-wrapper">
+                                        <i data-lucide="mail"></i>
+                                        <input type="email" id="email" placeholder="example@email.com" required autocomplete="email">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <div class="input-wrapper">
+                                        <i data-lucide="phone"></i>
+                                        <input type="tel" id="phone" placeholder="+91 XXXXX XXXXX" required autocomplete="tel">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <div class="input-wrapper">
+                                        <i data-lucide="lock"></i>
+                                        <input type="password" id="password" placeholder="Create password" required autocomplete="new-password">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm Password</label>
+                                    <div class="input-wrapper">
+                                        <i data-lucide="shield-alert"></i>
+                                        <input type="password" id="confirmPassword" placeholder="Confirm password" required autocomplete="new-password">
+                                    </div>
+                                    <span class="error-msg" id="passwordError">Passwords do not match</span>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary m-t-md">Create Account</button>
+                            </form>
+                            <p class="auth-switch">Already have an account? <span onclick="navigateTo('screen-home')">Log in</span></p>
+                        </div>
+                    </section>
+
+
+                    <!-- =======================================
+                         SCREEN 3: OTP VERIFICATION
+                         ======================================= -->
+                    <section class="screen" id="screen-verification">
+                        <div class="screen-header">
+                            <button class="back-btn" onclick="navigateTo('screen-signup')">
+                                <i data-lucide="chevron-left"></i>
+                            </button>
+                            <h2>Verification</h2>
+                            <div class="header-placeholder"></div>
+                        </div>
+
+                        <div class="screen-scrollable">
+                            <div class="verification-desc">
+                                <div class="verification-badge">
+                                    <i data-lucide="shield-check"></i>
+                                </div>
+                                <h3>Verify Your Identity</h3>
+                                <p>We've sent one-time authorization codes to secure your signup setup.</p>
+                            </div>
+
+                            <div class="otp-section">
+                                <div class="otp-title">
+                                    <span>Email Verification Code</span>
+                                    <span class="otp-dest" id="otpEmailDest">your-email@example.com</span>
+                                </div>
+                                <div class="otp-input-group" data-otp-group="email">
+                                    <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required class="otp-box">
+                                    <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required class="otp-box">
+                                    <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required class="otp-box">
+                                    <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required class="otp-box">
+                                </div>
+                            </div>
+
+                            <div class="otp-section">
+                                <div class="otp-title">
+                                    <span>Phone Verification Code</span>
+                                    <span class="otp-dest" id="otpPhoneDest">+91 98765 43210</span>
+                                </div>
+                                <div class="otp-input-group" data-otp-group="phone">
+                                    <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required class="otp-box">
+                                    <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required class="otp-box">
+                                    <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required class="otp-box">
+                                    <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required class="otp-box">
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary" onclick="handleVerificationSubmit()">Verify & Proceed</button>
+                            <button class="btn btn-text text-center m-t-sm" onclick="resendOTP()">Resend Codes</button>
+                        </div>
+                    </section>
+
+
+                    <!-- =======================================
+                         SCREEN 4: PROFILE SETUP
+                         ======================================= -->
+                    <section class="screen" id="screen-setup">
+                        <div class="screen-header">
+                            <button class="back-btn" onclick="navigateTo('screen-verification')">
+                                <i data-lucide="chevron-left"></i>
+                            </button>
+                            <h2>Profile Setup</h2>
+                            <div class="header-placeholder"></div>
+                        </div>
+
+                        <div class="screen-scrollable">
+                            <div class="profile-upload-sec">
+                                <div class="avatar-preview-container" onclick="triggerPhotoUpload()">
+                                    <img id="avatarPreview" src="https://placehold.co/150x150/1e1e2e/8b5cf6?text=Upload+Photo" alt="Profile Picture Preview">
+                                    <div class="upload-badge"><i data-lucide="camera"></i></div>
+                                </div>
+                                <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+                                <p class="help-text">Click to upload a premium profile picture</p>
+                            </div>
+
+                            <form id="profileSetupForm" class="setup-form" onsubmit="handleProfileSetup(event)">
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <label for="setupDOB">Date of Birth</label>
+                                        <input type="date" id="setupDOB" required>
+                                        <span class="error-msg" id="dobError">Must be 18+ to sign up</span>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label for="setupGender">Gender</label>
+                                        <select id="setupGender" required>
+                                            <option value="" disabled selected>Select</option>
+                                            <option value="female">Female</option>
+                                            <option value="male">Male</option>
+                                            <option value="nonbinary">Non-Binary</option>
+                                            <option value="other">Prefer not to say</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="setupBio">Bio</label>
+                                    <textarea id="setupBio" rows="3" placeholder="Tell us about yourself..." required></textarea>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <label for="setupCity">City</label>
+                                        <input type="text" id="setupCity" placeholder="Kochi, Bangalore..." required>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label for="setupOcc">Occupation</label>
+                                        <input type="text" id="setupOcc" placeholder="Designer, Student..." required>
+                                    </div>
+                                </div>
+
+                                <!-- Interactive Interests -->
+                                <div class="form-group">
+                                    <label>Interests (Select at least 3)</label>
+                                    <div class="interests-tags" id="setupInterestsContainer">
+                                        <!-- Will be dynamically populated, but static fallback is included -->
+                                        <span class="tag-selector" data-interest="Music">🎧 Music</span>
+                                        <span class="tag-selector" data-interest="Gaming">🎮 Gaming</span>
+                                        <span class="tag-selector" data-interest="Travel">✈️ Travel</span>
+                                        <span class="tag-selector" data-interest="Movies">🍿 Movies</span>
+                                        <span class="tag-selector" data-interest="Fitness">💪 Fitness</span>
+                                        <span class="tag-selector" data-interest="Cooking">🍳 Cooking</span>
+                                        <span class="tag-selector" data-interest="Coding">💻 Coding</span>
+                                        <span class="tag-selector" data-interest="Anime">🌸 Anime</span>
+                                        <span class="tag-selector" data-interest="Art">🎨 Art</span>
+                                        <span class="tag-selector" data-interest="Reading">📚 Reading</span>
+                                    </div>
+                                </div>
+
+                                <!-- Looking For Selection -->
+                                <div class="form-group">
+                                    <label>Looking For</label>
+                                    <div class="looking-for-row">
+                                        <button type="button" class="look-btn active" data-looking="Friendship">
+                                            <span class="emoji">🤝</span> Friendship
+                                        </button>
+                                        <button type="button" class="look-btn" data-looking="Relationship">
+                                            <span class="emoji">❤️</span> Relationship
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary m-t-md">Save & Get Matching</button>
+                            </form>
+                        </div>
+                    </section>
+
+
+                    <!-- =======================================
+                         SCREEN 5: HOME SCREEN (DAILY SUGGESTIONS)
+                         ======================================= -->
+                    <section class="screen" id="screen-home">
+                        <div class="home-header">
+                            <div class="home-logo-container">
+                                <img src="images/logo.png" alt="Chikkundo Logo" class="header-logo" onerror="this.src='https://placehold.co/40x40/8b5cf6/ffffff?text=C';">
+                                <h1>Chikkundo</h1>
+                            </div>
+                            <div class="header-actions">
+                                <div class="badge-wrapper" onclick="navigateTo('screen-requests')">
+                                    <i data-lucide="heart-handshake"></i>
+                                    <span class="badge-dot hide" id="incomingBadgeCount">2</span>
+                                </div>
+                                <div class="notification-trigger" onclick="toggleNotifications()">
+                                    <i data-lucide="bell"></i>
+                                    <span class="badge-dot"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="home-search-container">
+                            <div class="search-input-wrapper">
+                                <i data-lucide="search"></i>
+                                <input type="text" id="searchInput" placeholder="Search by interest, city, name..." oninput="handleSearch()">
+                            </div>
+                        </div>
+
+                        <!-- Scrollable Feed -->
+                        <div class="screen-scrollable" id="homeFeedScrollable">
+                            <div class="feed-section-title">
+                                <h3>Daily Suggestions</h3>
+                                <span class="suggestion-count" id="suggestionCount">15 profiles</span>
+                            </div>
+
+                            <!-- Carousel of Daily Profiles -->
+                            <div class="suggestions-list" id="suggestionsContainer">
+                                <!-- Dynamically filled with suggestions cards -->
+                            </div>
+                        </div>
+
+                        <!-- Bottom Nav -->
+                        <nav class="bottom-nav">
+                            <a class="nav-item active" onclick="navigateTo('screen-home')">
+                                <i data-lucide="sparkles"></i>
+                                <span>Home</span>
+                            </a>
+                            <a class="nav-item" onclick="navigateTo('screen-requests')">
+                                <i data-lucide="heart-handshake"></i>
+                                <span>Requests</span>
+                            </a>
+                            <a class="nav-item" onclick="navigateTo('screen-chat')">
+                                <i data-lucide="message-square"></i>
+                                <span>Chat</span>
+                            </a>
+                            <a class="nav-item" onclick="navigateTo('screen-settings')">
+                                <i data-lucide="settings"></i>
+                                <span>Settings</span>
+                            </a>
+                        </nav>
+                    </section>
+
+
+                    <!-- =======================================
+                         SCREEN 6: PROFILE DETAILS
+                         ======================================= -->
+                    <section class="screen" id="screen-profile-detail">
+                        <div class="detail-hero" id="detailHeroSection">
+                            <!-- Background overlay image set dynamically -->
+                            <div class="detail-actions">
+                                <button class="detail-icon-btn" onclick="navigateTo('screen-home')" aria-label="Go back to Home">
+                                    <i data-lucide="arrow-left"></i>
+                                </button>
+                                <button class="detail-icon-btn" id="detailShareBtn" aria-label="Share Profile">
+                                    <i data-lucide="share-2"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="detail-hero-info">
+                                <div class="detail-primary">
+                                    <h2 id="detailNameAge">Ananya, 23</h2>
+                                    <span class="trust-badge" id="detailTrustBadge">
+                                        <i data-lucide="shield-check"></i> <span id="detailTrustScore">96% Trust</span>
+                                    </span>
+                                </div>
+                                <div class="detail-secondary">
+                                    <span class="detail-sub-item"><i data-lucide="briefcase"></i> <span id="detailOccupation">UX Designer</span></span>
+                                    <span class="detail-sub-item"><i data-lucide="map-pin"></i> <span id="detailCity">Kochi</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="screen-scrollable detail-body">
+                            <div class="detail-section">
+                                <h3>About</h3>
+                                <p id="detailBio">A coffee enthusiast who believes in mid-level energy. Let's debate which filter coffee is best.</p>
+                            </div>
+
+                            <div class="detail-section">
+                                <h3>Interests</h3>
+                                <div class="interests-tags" id="detailInterests">
+                                    <!-- Dynamic -->
+                                </div>
+                            </div>
+
+                            <div class="detail-section">
+                                <h3>Looking For</h3>
+                                <div class="looking-tag" id="detailLookingFor">
+                                    🤝 Friendship
+                                </div>
+                            </div>
+
+                            <!-- CTA Connect Button -->
+                            <div class="detail-cta">
+                                <button class="btn btn-primary" id="detailConnectBtn" onclick="openConnectModal()">
+                                    <i data-lucide="user-plus"></i> Connect with <span id="detailBtnName">Ananya</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+
+                    <!-- =======================================
+                         SCREEN 7: CONNECT REQUEST MODAL
+                         ======================================= -->
+                    <div class="modal-backdrop" id="connectModal">
+                        <div class="modal-card">
+                            <div class="modal-header">
+                                <h3>Connect Request</h3>
+                                <button class="modal-close" onclick="closeConnectModal()"><i data-lucide="x"></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="modal-desc">Select or write a reason to send with your connection request to <strong id="modalProfileName">Ananya</strong>.</p>
+                                
+                                <div class="preset-reasons">
+                                    <button class="reason-chip active" onclick="selectPresetReason(this)">We have similar interests.</button>
+                                    <button class="reason-chip" onclick="selectPresetReason(this)">I'd like to be friends.</button>
+                                    <button class="reason-chip" onclick="selectPresetReason(this)">I'd like to know you better.</button>
+                                </div>
+
+                                <div class="form-group m-t-sm">
+                                    <label for="customReason">Custom Reason (Optional)</label>
+                                    <textarea id="customReason" rows="3" placeholder="Write a nice icebreaker..."></textarea>
+                                </div>
+
+                                <button class="btn btn-primary m-t-md w-full" id="sendRequestBtn" onclick="submitConnectRequest()">
+                                    Send Connection Request
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- =======================================
+                         SCREEN 8: PENDING REQUESTS SCREEN
+                         ======================================= -->
+                    <section class="screen" id="screen-requests">
+                        <div class="screen-header">
+                            <div class="header-placeholder"></div>
+                            <h2>Connection Requests</h2>
+                            <div class="header-placeholder"></div>
+                        </div>
+
+                        <!-- Custom Tab System (Incoming vs Sent) -->
+                        <div class="requests-tabs">
+                            <button class="tab-btn active" onclick="switchRequestTab('incoming')">Incoming (<span id="incomingCountVal">2</span>)</button>
+                            <button class="tab-btn" onclick="switchRequestTab('sent')">Sent (<span id="sentCountVal">0</span>)</button>
+                        </div>
+
+                        <div class="screen-scrollable">
+                            <!-- Incoming Requests List -->
+                            <div class="request-list active" id="incomingRequestsList">
+                                <!-- Populated dynamically -->
+                            </div>
+
+                            <!-- Sent Requests List -->
+                            <div class="request-list" id="sentRequestsList">
+                                <div class="empty-state">
+                                    <div class="empty-icon"><i data-lucide="send"></i></div>
+                                    <h3>No Requests Sent Yet</h3>
+                                    <p>Browse suggestions on the home screen and click connect!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Nav -->
+                        <nav class="bottom-nav">
+                            <a class="nav-item" onclick="navigateTo('screen-home')">
+                                <i data-lucide="sparkles"></i>
+                                <span>Home</span>
+                            </a>
+                            <a class="nav-item active" onclick="navigateTo('screen-requests')">
+                                <i data-lucide="heart-handshake"></i>
+                                <span>Requests</span>
+                            </a>
+                            <a class="nav-item" onclick="navigateTo('screen-chat')">
+                                <i data-lucide="message-square"></i>
+                                <span>Chat</span>
+                            </a>
+                            <a class="nav-item" onclick="navigateTo('screen-settings')">
+                                <i data-lucide="settings"></i>
+                                <span>Settings</span>
+                            </a>
+                        </nav>
+                    </section>
+
+
+                    <!-- =======================================
+                         SCREEN 9: CHAT SCREEN
+                         ======================================= -->
+                    <section class="screen" id="screen-chat">
+                        
+                        <!-- Chat List Sub-View -->
+                        <div id="chat-list-view" class="chat-subview active">
+                            <div class="screen-header">
+                                <div class="header-placeholder"></div>
+                                <h2>Conversations</h2>
+                                <div class="header-placeholder"></div>
+                            </div>
+                            
+                            <div class="screen-scrollable" id="chatListContainer">
+                                <!-- List of Active Chats -->
+                            </div>
+                        </div>
+
+                        <!-- Direct Chat Window Sub-View (Slide-in) -->
+                        <div id="chat-window-view" class="chat-subview">
+                            <div class="chat-window-header">
+                                <button class="chat-back-btn" onclick="closeChatWindow()">
+                                    <i data-lucide="arrow-left"></i>
+                                </button>
+                                <div class="chat-active-user">
+                                    <img id="chatActiveAvatar" src="images/female_1.png" alt="Profile avatar">
+                                    <div>
+                                        <h3 id="chatActiveName">Ananya</h3>
+                                        <span class="user-status online">Online</span>
+                                    </div>
+                                </div>
+                                <button class="chat-header-action" onclick="viewChatUserProfile()">
+                                    <i data-lucide="user"></i>
+                                </button>
+                            </div>
+
+                            <!-- Chat Messages Area -->
+                            <div class="chat-messages" id="chatMessagesArea">
+                                <!-- Populated dynamically -->
+                            </div>
+
+                            <!-- Future Feature Placeholder overlays -->
+                            <div class="coming-soon-bar" id="mediaFeatureBadge">
+                                <span class="badge-tag">Future Feature</span>
+                                <span>Photos and Voice Notes are coming soon!</span>
+                            </div>
+
+                            <!-- Chat Input Bar -->
+                            <div class="chat-input-bar">
+                                <button class="chat-media-btn disabled" title="Images (Coming Soon)">
+                                    <i data-lucide="image"></i>
+                                </button>
+                                <button class="chat-media-btn disabled" title="Voice Notes (Coming Soon)">
+                                    <i data-lucide="mic"></i>
+                                </button>
+                                <input type="text" id="chatMessageInput" placeholder="Type a message..." onkeypress="handleChatKeyPress(event)">
+                                <button class="chat-send-btn" onclick="sendChatMessage()">
+                                    <i data-lucide="send"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Nav (Hidden when chat window is active, managed via JS) -->
+                        <nav class="bottom-nav" id="chatBottomNav">
+                            <a class="nav-item" onclick="navigateTo('screen-home')">
+                                <i data-lucide="sparkles"></i>
+                                <span>Home</span>
+                            </a>
+                            <a class="nav-item" onclick="navigateTo('screen-requests')">
+                                <i data-lucide="heart-handshake"></i>
+                                <span>Requests</span>
+                            </a>
+                            <a class="nav-item active" onclick="navigateTo('screen-chat')">
+                                <i data-lucide="message-square"></i>
+                                <span>Chat</span>
+                            </a>
+                            <a class="nav-item" onclick="navigateTo('screen-settings')">
+                                <i data-lucide="settings"></i>
+                                <span>Settings</span>
+                            </a>
+                        </nav>
+                    </section>
+
+
+                    <!-- =======================================
+                         SCREEN 10: SETTINGS SCREEN
+                         ======================================= -->
+                    <section class="screen" id="screen-settings">
+                        <div class="screen-header">
+                            <div class="header-placeholder"></div>
+                            <h2>Settings</h2>
+                            <div class="header-placeholder"></div>
+                        </div>
+
+                        <div class="screen-scrollable">
+                            <div class="settings-category">
+                                <h3>Preference</h3>
+                                <div class="settings-item">
+                                    <div class="settings-info">
+                                        <i data-lucide="moon"></i>
+                                        <span>Dark Theme</span>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="themeToggle" checked onchange="handleThemeToggle(this)">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="settings-category">
+                                <h3>Privacy & Security</h3>
+                                <div class="settings-item">
+                                    <div class="settings-info">
+                                        <i data-lucide="eye-off"></i>
+                                        <span>Private Profile</span>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="settings-info">
+                                        <i data-lucide="activity"></i>
+                                        <span>Show Online Status</span>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="settings-item" onclick="toggleBlockedList()">
+                                    <div class="settings-info">
+                                        <i data-lucide="ban"></i>
+                                        <span>Blocked Users</span>
+                                    </div>
+                                    <i data-lucide="chevron-right" class="arrow-icon"></i>
+                                </div>
+                                <div class="blocked-users-list collapsed" id="blockedUsersList">
+                                    <div class="blocked-user">
+                                        <span>Rohan Sharma</span>
+                                        <button class="btn-text text-danger" onclick="unblockUser(this)">Unblock</button>
+                                    </div>
+                                    <div class="blocked-user">
+                                        <span>Nisha Nair</span>
+                                        <button class="btn-text text-danger" onclick="unblockUser(this)">Unblock</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-category">
+                                <h3>Feedback & Support</h3>
+                                <div class="feedback-box">
+                                    <textarea id="feedbackText" rows="3" placeholder="Tell us how we can make Chikkundo better..."></textarea>
+                                    <button class="btn btn-secondary btn-sm m-t-sm" onclick="submitFeedback()">Submit Feedback</button>
+                                </div>
+                            </div>
+
+                            <div class="settings-actions">
+                                <button class="btn btn-outline-danger" onclick="handleLogout()">
+                                    <i data-lucide="log-out"></i> Logout
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Nav -->
+                        <nav class="bottom-nav">
+                            <a class="nav-item" onclick="navigateTo('screen-home')">
+                                <i data-lucide="sparkles"></i>
+                                <span>Home</span>
+                            </a>
+                            <a class="nav-item" onclick="navigateTo('screen-requests')">
+                                <i data-lucide="heart-handshake"></i>
+                                <span>Requests</span>
+                            </a>
+                            <a class="nav-item" onclick="navigateTo('screen-chat')">
+                                <i data-lucide="message-square"></i>
+                                <span>Chat</span>
+                            </a>
+                            <a class="nav-item active" onclick="navigateTo('screen-settings')">
+                                <i data-lucide="settings"></i>
+                                <span>Settings</span>
+                            </a>
+                        </nav>
+                    </section>
+
+                </div>
+            </div>
+            <div class="home-indicator"></div>
+        </div>
+    </div>
+
+    <!-- Notification Overlay Dropdown -->
+    <div class="notification-overlay" id="notificationOverlay">
+        <div class="notification-header">
+            <h4>Notifications</h4>
+            <button onclick="clearNotifications()"><i data-lucide="trash-2"></i></button>
+        </div>
+        <div class="notification-body" id="notificationBody">
+            <div class="notif-item unread">
+                <div class="notif-icon"><i data-lucide="heart"></i></div>
+                <div class="notif-content">
+                    <p><strong>Rahul V.</strong> sent you a connect request.</p>
+                    <span class="notif-time">2 mins ago</span>
+                </div>
+            </div>
+            <div class="notif-item unread">
+                <div class="notif-icon"><i data-lucide="message-circle"></i></div>
+                <div class="notif-content">
+                    <p><strong>Devika</strong> accepted your connect request! Start chatting.</p>
+                    <span class="notif-time">1 hour ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification System -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- App JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
