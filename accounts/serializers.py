@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-from .models import Profile, Interest,ConnectRequest
+from .models import Profile, Interest, ConnectRequest, Conversation, Message
 from django.db import models
 User = get_user_model()
 
@@ -55,6 +55,7 @@ class InterestSerializer(serializers.ModelSerializer):
 
 #profile serializer
 class ProfileSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='user.id', read_only=True)
     username = serializers.CharField(source='user.username', read_only=True)
     full_name = serializers.CharField(source='user.full_name', read_only=True)
     email = serializers.EmailField(source='user.email', read_only=True)
@@ -68,7 +69,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
-            'username', 'full_name', 'email', 'phone',
+            'id', 'username', 'full_name', 'email', 'phone',
             'profile_picture', 'bio', 'address', 'city', 'state',
             'pincode', 'date_of_birth', 'gender', 'looking_for',
             'interests', 'interest_ids', 'profile_completion',
@@ -123,3 +124,45 @@ class ConnectRequestSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You are already connected with this user.")
 
         return data
+#message serializer   
+class MessageSerializer(serializers.ModelSerializer):
+    sender_username = serializers.CharField(source='sender.username', read_only=True)
+
+    class Meta:
+        model = Message
+        fields = ['id', 'conversation', 'sender', 'sender_username', 'content', 'is_read', 'created_at']
+        read_only_fields = ['sender', 'is_read', 'created_at']
+
+    def validate_content(self, value):
+        if not value or not value.strip():
+            raise serializers.ValidationError("Message cannot be empty.")
+        return value
+
+#conversation serializer
+class ConversationSerializer(serializers.ModelSerializer):
+    other_participant = serializers.SerializerMethodField()
+    last_message = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Conversation
+        fields = ['id', 'other_participant', 'last_message', 'created_at', 'updated_at']
+
+    def get_other_participant(self, obj):
+        request = self.context.get('request')
+        current_user = request.user
+        other_user = obj.participant_2 if obj.participant_1 == current_user else obj.participant_1
+        return {
+            'id': other_user.id,
+            'username': other_user.username,
+            'full_name': other_user.full_name
+        }
+
+    def get_last_message(self, obj):
+        last_msg = obj.messages.order_by('-created_at').first()
+        if last_msg:
+            return {
+                'content': last_msg.content,
+                'sender': last_msg.sender.username,
+                'created_at': last_msg.created_at
+            }
+        return None

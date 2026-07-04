@@ -7,14 +7,15 @@ from django.db import models
 
 from .serializers import (
     SignupSerializer, LoginSerializer, ProfileSerializer,
-    InterestSerializer, ConnectRequestSerializer
+    InterestSerializer, ConnectRequestSerializer,
+    ConversationSerializer, MessageSerializer
 )
-from .models import Profile, Interest, ConnectRequest
+from .models import Profile, Interest, ConnectRequest, Conversation, Message
 from .utils import success_response
 
 User = get_user_model()
 
-
+#signup view
 class SignupView(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -29,7 +30,7 @@ class SignupView(APIView):
             status_code=status.HTTP_201_CREATED
         )
 
-
+#login view
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -58,7 +59,7 @@ class LoginView(APIView):
             status_code=status.HTTP_200_OK
         )
 
-
+#logout view
 class LogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -66,7 +67,7 @@ class LogoutView(APIView):
         request.user.auth_token.delete()
         return success_response(message="Logout successful", data=None, status_code=status.HTTP_200_OK)
 
-
+#profile create view
 class ProfileCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -79,7 +80,7 @@ class ProfileCreateView(APIView):
         serializer.save(user=request.user)
         return success_response(message="Profile created successfully", data=serializer.data, status_code=status.HTTP_201_CREATED)
 
-
+#Profile detail view
 class ProfileDetailView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -92,7 +93,7 @@ class ProfileDetailView(APIView):
         serializer = ProfileSerializer(profile)
         return success_response(message="Profile fetched successfully", data=serializer.data, status_code=status.HTTP_200_OK)
 
-
+#profile update view
 class ProfileUpdateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -107,7 +108,7 @@ class ProfileUpdateView(APIView):
         serializer.save()
         return success_response(message="Profile updated successfully", data=serializer.data, status_code=status.HTTP_200_OK)
 
-
+#interest list view
 class InterestListView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -116,7 +117,7 @@ class InterestListView(APIView):
         serializer = InterestSerializer(interests, many=True)
         return success_response(message="Interests fetched successfully", data=serializer.data, status_code=status.HTTP_200_OK)
 
-
+#connect request views
 class SendConnectRequestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -126,7 +127,7 @@ class SendConnectRequestView(APIView):
         serializer.save(sender=request.user)
         return success_response(message="Connect request sent", data=serializer.data, status_code=status.HTTP_201_CREATED)
 
-
+#pending and sent requests views
 class PendingRequestsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -144,7 +145,7 @@ class SentRequestsView(APIView):
         serializer = ConnectRequestSerializer(requests_qs, many=True)
         return success_response(message="Sent requests fetched", data=serializer.data, status_code=status.HTTP_200_OK)
 
-
+#accept and decline connect request views
 class AcceptConnectRequestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -157,10 +158,23 @@ class AcceptConnectRequestView(APIView):
 
         connect_request.status = 'accepted'
         connect_request.save()
+
+        # Automatic aayi Conversation create cheyyuka (already illenkil mathram)
+        user_a = connect_request.sender
+        user_b = connect_request.receiver
+
+        conversation = Conversation.objects.filter(
+            models.Q(participant_1=user_a, participant_2=user_b) |
+            models.Q(participant_1=user_b, participant_2=user_a)
+        ).first()
+
+        if not conversation:
+            Conversation.objects.create(participant_1=user_a, participant_2=user_b)
+
         serializer = ConnectRequestSerializer(connect_request)
         return success_response(message="Request accepted", data=serializer.data, status_code=status.HTTP_200_OK)
 
-
+#decline connect request view
 class DeclineConnectRequestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -176,7 +190,7 @@ class DeclineConnectRequestView(APIView):
         serializer = ConnectRequestSerializer(connect_request)
         return success_response(message="Request declined", data=serializer.data, status_code=status.HTTP_200_OK)
 
-
+#suggestions view
 class SuggestionsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -210,3 +224,83 @@ class SuggestionsView(APIView):
 
         serializer = ProfileSerializer(suggestions, many=True)
         return success_response(message="Suggestions fetched successfully", data=serializer.data, status_code=status.HTTP_200_OK)
+
+
+class ConversationListView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        conversations = Conversation.objects.filter(
+            models.Q(participant_1=request.user) | models.Q(participant_2=request.user)
+        ).order_by('-updated_at')
+        serializer = ConversationSerializer(conversations, many=True, context={'request': request})
+        return success_response(message="Conversations fetched successfully", data=serializer.data, status_code=status.HTTP_200_OK)
+
+#conversation detail view
+class ConversationDetailView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, conversation_id):
+        try:
+            conversation = Conversation.objects.get(
+                models.Q(id=conversation_id),
+                models.Q(participant_1=request.user) | models.Q(participant_2=request.user)
+            )
+        except Conversation.DoesNotExist:
+            return success_response(message="Conversation not found.", data=None, status_code=status.HTTP_404_NOT_FOUND)
+
+        serializer = ConversationSerializer(conversation, context={'request': request})
+        return success_response(message="Conversation fetched successfully", data=serializer.data, status_code=status.HTTP_200_OK)
+
+#send message view
+class SendMessageView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        conversation_id = request.data.get('conversation_id')
+        content = request.data.get('content')
+
+        # Rule: Conversation exist cheyyunnundo
+        try:
+            conversation = Conversation.objects.get(id=conversation_id)
+        except Conversation.DoesNotExist:
+            return success_response(message="Conversation not found.", data=None, status_code=status.HTTP_404_NOT_FOUND)
+
+        # Rule: Sender conversation-il participant aayirikkanam
+        if request.user != conversation.participant_1 and request.user != conversation.participant_2:
+            return success_response(message="You are not part of this conversation.", data=None, status_code=status.HTTP_403_FORBIDDEN)
+
+        # Rule: Empty message reject cheyyuka
+        if not content or not content.strip():
+            return success_response(message="Message cannot be empty.", data=None, status_code=status.HTTP_400_BAD_REQUEST)
+
+        message = Message.objects.create(conversation=conversation, sender=request.user, content=content.strip())
+
+        # Conversation-inte updated_at refresh cheyyuka (latest activity kaanikkaan)
+        conversation.save()
+
+        serializer = MessageSerializer(message)
+        return success_response(message="Message sent", data=serializer.data, status_code=status.HTTP_201_CREATED)
+
+#get messages view
+class GetMessagesView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, conversation_id):
+        try:
+            conversation = Conversation.objects.get(id=conversation_id)
+        except Conversation.DoesNotExist:
+            return success_response(message="Conversation not found.", data=None, status_code=status.HTTP_404_NOT_FOUND)
+
+        # Rule: User conversation-il participant aayirikkanam
+        if request.user != conversation.participant_1 and request.user != conversation.participant_2:
+            return success_response(message="You are not part of this conversation.", data=None, status_code=status.HTTP_403_FORBIDDEN)
+
+        # Read status update cheyyuka — current user allathe sender ayacha messages "read" aakkuka
+        Message.objects.filter(conversation=conversation, is_read=False).exclude(sender=request.user).update(is_read=True)
+
+        messages = conversation.messages.all()  # already ordered by created_at (oldest -> newest)
+        serializer = MessageSerializer(messages, many=True)
+        return success_response(message="Messages fetched successfully", data=serializer.data, status_code=status.HTTP_200_OK)
+
+

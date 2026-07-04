@@ -5,7 +5,9 @@ from .views import (
     InterestListView,
     SendConnectRequestView, PendingRequestsView, SentRequestsView,
     AcceptConnectRequestView, DeclineConnectRequestView,
-    SuggestionsView
+    SuggestionsView,
+    ConversationListView, ConversationDetailView,
+    SendMessageView, GetMessagesView
 )
 
 urlpatterns = [
@@ -24,5 +26,12 @@ urlpatterns = [
     path('requests/accept/', AcceptConnectRequestView.as_view(), name='request-accept'),
     path('requests/decline/', DeclineConnectRequestView.as_view(), name='request-decline'),
     path('requests/sent/', SentRequestsView.as_view(), name='request-sent'),
+
     path('suggestions/', SuggestionsView.as_view(), name='suggestions'),
+
+    path('conversations/', ConversationListView.as_view(), name='conversation-list'),
+    path('conversations/<int:conversation_id>/', ConversationDetailView.as_view(), name='conversation-detail'),
+
+    path('messages/send/', SendMessageView.as_view(), name='message-send'),
+    path('messages/<int:conversation_id>/', GetMessagesView.as_view(), name='message-list'),
 ]

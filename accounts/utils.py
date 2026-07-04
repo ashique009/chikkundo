@@ -35,8 +35,9 @@ def custom_exception_handler(exc, context):
 
 def success_response(message="Success", data=None, status_code=200):
     from rest_framework.response import Response
+    is_success = status_code < 400   # 400-inu thaazhe ella-um success, mukalil ella-um error
     return Response({
-        "success": True,
+        "success": is_success,
         "message": message,
         "data": data
     }, status=status_code)
