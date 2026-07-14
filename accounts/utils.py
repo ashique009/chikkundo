@@ -41,3 +41,9 @@ def success_response(message="Success", data=None, status_code=200):
         "message": message,
         "data": data
     }, status=status_code)
+
+from rest_framework import permissions
+
+class IsAdminUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated and request.user.is_staff)

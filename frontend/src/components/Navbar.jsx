@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LogOut, User as UserIcon, Settings, MessageSquare } from 'lucide-react';
 import { API_BASE_URL } from '../api/client';
@@ -7,8 +7,13 @@ import { API_BASE_URL } from '../api/client';
 export const Navbar = () => {
   const { userProfile, logout, username } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isAdminPath = location.pathname.startsWith('/admin');
 
   const handleLogout = async () => {
+    if (isAdminPath) {
+      localStorage.removeItem('admin_token');
+    }
     await logout();
     navigate('/');
   };
@@ -28,10 +33,15 @@ export const Navbar = () => {
   return (
     <nav className="sticky top-0 z-40 w-full glass-panel border-b border-brand-purple/10 px-4 md:px-8 py-3 flex items-center justify-between shadow-lg bg-brand-black/40 backdrop-blur-md">
       <div className="flex items-center gap-2">
-        <Link to="/dashboard" className="flex items-center gap-2 select-none">
+        <Link to={isAdminPath ? "/admin/dashboard" : "/dashboard"} className="flex items-center gap-2 select-none">
           <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent font-display">
             Chikkundo
           </span>
+          {isAdminPath && (
+            <span className="text-[10px] uppercase font-extrabold tracking-widest bg-brand-purple/20 text-brand-purple-light border border-brand-purple/35 px-2 py-0.5 rounded shadow-[0_0_10px_rgba(124,58,237,0.15)]">
+              Admin
+            </span>
+          )}
         </Link>
       </div>
 

@@ -1,28 +1,40 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Sparkles, 
   UserCheck, 
   MessageSquare, 
   Settings, 
-  HeartHandshake
+  HeartHandshake,
+  Users,
+  ExternalLink,
+  ShieldCheck
 } from 'lucide-react';
 
 export const Sidebar = () => {
-  const menuItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Suggestions', path: '/suggestions', icon: Sparkles },
-    { name: 'Connect Requests', path: '/requests', icon: UserCheck },
-    { name: 'Conversations', path: '/conversations', icon: MessageSquare },
-    { name: 'Settings', path: '/settings', icon: Settings },
-    { name: 'Feedback', path: '/feedback', icon: HeartHandshake },
-  ];
+  const location = useLocation();
+  const isAdminPath = location.pathname.startsWith('/admin');
+
+  const menuItems = isAdminPath 
+    ? [
+        { name: 'Admin Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+        { name: 'Manage Users', path: '/admin/users', icon: Users },
+        { name: 'Return to App', path: '/dashboard', icon: ExternalLink },
+      ]
+    : [
+        { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+        { name: 'Suggestions', path: '/suggestions', icon: Sparkles },
+        { name: 'Connect Requests', path: '/requests', icon: UserCheck },
+        { name: 'Conversations', path: '/conversations', icon: MessageSquare },
+        { name: 'Settings', path: '/settings', icon: Settings },
+        { name: 'Feedback', path: '/feedback', icon: HeartHandshake },
+      ];
 
   return (
-    <aside className="w-64 glass-panel border-r border-brand-purple/10 min-h-[calc(100vh-65px)] p-4 flex-shrink-0 flex-col gap-1 hidden md:flex bg-brand-dark/20">
+    <aside className="w-64 glass-panel border-r border-brand-purple/10 min-h-[calc(100vh-65px)] p-4 flex-shrink-0 flex-col gap-1 hidden md:flex bg-brand-dark/20 z-10">
       <div className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 mb-3 px-3">
-        Navigation
+        {isAdminPath ? 'Admin Console' : 'Navigation'}
       </div>
       <div className="flex flex-col gap-1.5 flex-grow">
         {menuItems.map((item) => {
@@ -47,8 +59,19 @@ export const Sidebar = () => {
       </div>
       
       <div className="p-3 bg-brand-purple/5 border border-brand-purple/10 rounded-xl mt-auto">
-        <div className="text-xs font-bold text-slate-300 font-display">Chikkundo MVP</div>
-        <div className="text-[10px] text-slate-500 mt-1">Find Your Perfect Mid.</div>
+        <div className="text-xs font-bold text-slate-300 font-display flex items-center gap-1.5">
+          {isAdminPath ? (
+            <>
+              <ShieldCheck className="w-3.5 h-3.5 text-brand-purple-light" />
+              <span className="text-brand-purple-light">Chikkundo Admin</span>
+            </>
+          ) : (
+            <span>Chikkundo MVP</span>
+          )}
+        </div>
+        <div className="text-[10px] text-slate-500 mt-1">
+          {isAdminPath ? 'System Administration' : 'Find Your Perfect Mid.'}
+        </div>
       </div>
     </aside>
   );

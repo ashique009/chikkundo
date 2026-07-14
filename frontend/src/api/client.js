@@ -67,4 +67,6 @@ client.interceptors.response.use(
 );
 
 export default client;
-export { API_BASE_URL };
+const API_URL = API_BASE_URL;
+export { API_BASE_URL, API_URL };
+

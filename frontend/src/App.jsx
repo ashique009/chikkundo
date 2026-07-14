@@ -25,6 +25,12 @@ import Chat from './pages/Chat';
 import Settings from './pages/Settings';
 import Feedback from './pages/Feedback';
 import NotFound from './pages/NotFound';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminUsers from './pages/AdminUsers';
+import AdminProtectedRoute from './components/AdminProtectedRoute';
+
+
 
 function App() {
   return (
@@ -77,7 +83,27 @@ function App() {
             >
               <Route index element={<Settings />} />
             </Route>
+            {/* ---------------- ADMIN ROUTES ---------------- */}
 
+<Route path="/admin/login" element={<AdminLogin />} />
+
+<Route
+  path="/admin/dashboard"
+  element={
+    <AdminProtectedRoute>
+      <AdminDashboard />
+    </AdminProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/users"
+  element={
+    <AdminProtectedRoute>
+      <AdminUsers />
+    </AdminProtectedRoute>
+  }
+/>
             {/* Fallback 404 Pages */}
             <Route
               path="*"

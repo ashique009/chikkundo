@@ -7,7 +7,8 @@ from .views import (
     AcceptConnectRequestView, DeclineConnectRequestView,
     SuggestionsView,
     ConversationListView, ConversationDetailView,
-    SendMessageView, GetMessagesView
+    SendMessageView, GetMessagesView,
+    AdminLoginView,AdminDashboardStatsView, AdminUserListView, AdminUserBanView, AdminUserUnbanView, AdminUserDeleteView
 )
 
 urlpatterns = [
@@ -34,4 +35,10 @@ urlpatterns = [
 
     path('messages/send/', SendMessageView.as_view(), name='message-send'),
     path('messages/<int:conversation_id>/', GetMessagesView.as_view(), name='message-list'),
+    path('admin-login/', AdminLoginView.as_view(), name='admin-login'),
+    path('admin/dashboard-stats/', AdminDashboardStatsView.as_view(), name='admin-dashboard-stats'),
+    path('admin/users/', AdminUserListView.as_view(), name='admin-user-list'),
+    path('admin/users/<int:user_id>/ban/', AdminUserBanView.as_view(), name='admin-user-ban'),
+    path('admin/users/<int:user_id>/unban/', AdminUserUnbanView.as_view(), name='admin-user-unban'),
+    path('admin/users/<int:user_id>/delete/', AdminUserDeleteView.as_view(), name='admin-user-delete'),
 ]

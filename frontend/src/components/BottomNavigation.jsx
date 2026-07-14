@@ -1,21 +1,32 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Sparkles, 
   UserCheck, 
   MessageSquare, 
-  Settings 
+  Settings,
+  Users,
+  ExternalLink
 } from 'lucide-react';
 
 export const BottomNavigation = () => {
-  const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Suggestions', path: '/suggestions', icon: Sparkles },
-    { name: 'Requests', path: '/requests', icon: UserCheck },
-    { name: 'Chats', path: '/conversations', icon: MessageSquare },
-    { name: 'Settings', path: '/settings', icon: Settings },
-  ];
+  const location = useLocation();
+  const isAdminPath = location.pathname.startsWith('/admin');
+
+  const navItems = isAdminPath
+    ? [
+        { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+        { name: 'Users', path: '/admin/users', icon: Users },
+        { name: 'Exit Admin', path: '/dashboard', icon: ExternalLink },
+      ]
+    : [
+        { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+        { name: 'Suggestions', path: '/suggestions', icon: Sparkles },
+        { name: 'Requests', path: '/requests', icon: UserCheck },
+        { name: 'Chats', path: '/conversations', icon: MessageSquare },
+        { name: 'Settings', path: '/settings', icon: Settings },
+      ];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden glass-panel border-t border-brand-purple/10 px-2 py-2 flex items-center justify-around shadow-2xl bg-brand-black/75 backdrop-blur-lg pb-safe-bottom">

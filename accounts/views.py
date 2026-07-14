@@ -4,11 +4,14 @@ from rest_framework import status, permissions
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, get_user_model
 from django.db import models
+from django.utils import timezone
+from datetime import timedelta
+from .utils import success_response, IsAdminUser
 
 from .serializers import (
     SignupSerializer, LoginSerializer, ProfileSerializer,
     InterestSerializer, ConnectRequestSerializer,
-    ConversationSerializer, MessageSerializer
+    ConversationSerializer, MessageSerializer,AdminUserListSerializer
 )
 from .models import Profile, Interest, ConnectRequest, Conversation, Message
 from .utils import success_response
@@ -51,7 +54,12 @@ class LoginView(APIView):
 
         if user is None:
             return success_response(message="Invalid credentials", data=None, status_code=status.HTTP_400_BAD_REQUEST)
-
+        if user.is_banned:
+            return success_response(
+                message="Your account has been banned. Please contact support.",
+                data=None,
+                status_code=status.HTTP_403_FORBIDDEN
+            )
         token, _ = Token.objects.get_or_create(user=user)
         return success_response(
             message="Login successful",
@@ -313,3 +321,154 @@ class GetMessagesView(APIView):
         return success_response(message="Messages fetched successfully", data=serializer.data, status_code=status.HTTP_200_OK)
 
 
+class AdminLoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        identifier = serializer.validated_data['identifier']
+        password = serializer.validated_data['password']
+
+        user_obj = User.objects.filter(email=identifier).first() or \
+                   User.objects.filter(username=identifier).first()
+
+        if user_obj is None:
+            return success_response(message="Invalid credentials", data=None, status_code=status.HTTP_400_BAD_REQUEST)
+
+        user = authenticate(username=user_obj.username, password=password)
+
+        if user is None:
+            return success_response(message="Invalid credentials", data=None, status_code=status.HTTP_400_BAD_REQUEST)
+        if user.is_banned:
+            return success_response(
+                message="Your account has been suspended. Please contact the system administrator.",
+                data=None,
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        # Admin check — mukhya rule
+        if not user.is_staff:
+            return success_response(message="You are not authorized to access the admin panel.", data=None, status_code=status.HTTP_403_FORBIDDEN)
+
+        token, _ = Token.objects.get_or_create(user=user)
+        return success_response(
+            message="Admin login successful",
+            data={
+                "token": token.key,
+                "username": user.username,
+                "full_name": user.full_name,
+                "is_staff": user.is_staff,
+                "is_superuser": user.is_superuser,
+            },
+            status_code=status.HTTP_200_OK
+        )
+
+
+class AdminDashboardStatsView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        today = timezone.now().date()
+
+        total_users = User.objects.count()
+        active_users = User.objects.filter(is_banned=False).count()
+        banned_users = User.objects.filter(is_banned=True).count()
+        new_users_today = User.objects.filter(created_at__date=today).count()
+
+        total_connections = ConnectRequest.objects.filter(status='accepted').count()
+        total_messages = Message.objects.count()
+
+        # Profile completion average
+        profiles = Profile.objects.all()
+        if profiles.exists():
+            total_percentage = sum(p.profile_completion['percentage'] for p in profiles)
+            avg_completion = round(total_percentage / profiles.count())
+        else:
+            avg_completion = 0
+
+        data = {
+            "total_users": total_users,
+            "active_users": active_users,
+            "banned_users": banned_users,
+            "new_users_today": new_users_today,
+            "total_connections": total_connections,
+            "total_messages": total_messages,
+            "reports": 0,  # Reports system inн venam, ippo placeholder
+            "avg_profile_completion": avg_completion,
+        }
+
+        return success_response(message="Dashboard stats fetched successfully", data=data, status_code=status.HTTP_200_OK)
+
+
+class AdminUserListView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        users = User.objects.all().order_by('-date_joined')
+
+        # Search
+        search = request.query_params.get('search')
+        if search:
+            users = users.filter(
+                models.Q(username__icontains=search) |
+                models.Q(email__icontains=search) |
+                models.Q(phone__icontains=search) |
+                models.Q(full_name__icontains=search)
+            )
+
+        # Filters
+        status_filter = request.query_params.get('status')
+        if status_filter == 'active':
+            users = users.filter(is_banned=False)
+        elif status_filter == 'banned':
+            users = users.filter(is_banned=True)
+
+        gender_filter = request.query_params.get('gender')
+        if gender_filter:
+            users = users.filter(profile__gender=gender_filter)
+
+        serializer = AdminUserListSerializer(users, many=True)
+        return success_response(message="Users fetched successfully", data=serializer.data, status_code=status.HTTP_200_OK)
+
+
+class AdminUserBanView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return success_response(message="User not found.", data=None, status_code=status.HTTP_404_NOT_FOUND)
+
+        user.is_banned = True
+        user.save()
+        return success_response(message=f"{user.username} has been banned.", data=None, status_code=status.HTTP_200_OK)
+
+
+class AdminUserUnbanView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return success_response(message="User not found.", data=None, status_code=status.HTTP_404_NOT_FOUND)
+
+        user.is_banned = False
+        user.save()
+        return success_response(message=f"{user.username} has been unbanned.", data=None, status_code=status.HTTP_200_OK)
+
+
+class AdminUserDeleteView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def delete(self, request, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return success_response(message="User not found.", data=None, status_code=status.HTTP_404_NOT_FOUND)
+
+        username = user.username
+        user.delete()
+        return success_response(message=f"{username} has been deleted.", data=None, status_code=status.HTTP_200_OK)

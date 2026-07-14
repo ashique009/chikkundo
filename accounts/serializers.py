@@ -166,3 +166,32 @@ class ConversationSerializer(serializers.ModelSerializer):
                 'created_at': last_msg.created_at
             }
         return None
+        
+
+class AdminUserListSerializer(serializers.ModelSerializer):
+    profile_picture = serializers.SerializerMethodField()
+    city = serializers.SerializerMethodField()
+    gender = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = [
+            'id', 'username', 'full_name', 'email', 'phone',
+            'profile_picture', 'gender', 'city',
+            'is_banned', 'is_staff', 'date_joined'
+        ]
+
+    def get_profile_picture(self, obj):
+        if hasattr(obj, 'profile') and obj.profile.profile_picture:
+            return obj.profile.profile_picture.url
+        return None
+
+    def get_city(self, obj):
+        if hasattr(obj, 'profile'):
+            return obj.profile.city
+        return None
+
+    def get_gender(self, obj):
+        if hasattr(obj, 'profile'):
+            return obj.profile.gender
+        return None
