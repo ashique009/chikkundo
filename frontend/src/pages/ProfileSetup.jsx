@@ -123,7 +123,7 @@ export const ProfileSetup = () => {
           Setup Your Profile
         </h2>
         <p className="text-slate-400 text-sm mb-8">
-          Tell us about yourself to find your perfect connection on Chikkundo.
+          Tell us about yourself to find your perfect connection on Lynqo.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-8">

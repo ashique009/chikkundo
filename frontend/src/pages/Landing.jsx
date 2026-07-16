@@ -51,7 +51,7 @@ export const Landing = () => {
       {/* Landing Header */}
       <header className="px-6 py-6 md:px-12 flex justify-between items-center relative z-10">
         <span className="text-2xl font-black font-display bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent select-none">
-          Chikkundo
+          Lynqo
         </span>
         <div className="flex gap-4">
           <Link
@@ -88,7 +88,7 @@ export const Landing = () => {
             variants={itemVariants}
             className="text-5xl md:text-7xl font-extrabold tracking-tight font-display bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent leading-none"
           >
-            Find Your Perfect Mid.
+            Connect Beyond Chats.
           </motion.h1>
 
           <motion.p
@@ -146,7 +146,7 @@ export const Landing = () => {
 
       {/* Footer */}
       <footer className="px-6 py-8 border-t border-slate-900 text-center text-xs text-slate-500 font-medium z-10 relative">
-        <p>© 2026 Chikkundo. All rights reserved.</p>
+        <p>© 2026 Lynqo. All rights reserved.</p>
         <p className="mt-1.5 text-slate-600">Built securely for genuine connections.</p>
       </footer>
     </div>

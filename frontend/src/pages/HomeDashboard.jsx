@@ -72,7 +72,7 @@ export const HomeDashboard = () => {
               Hello, {userProfile?.full_name?.split(' ')[0] || username}!
             </h2>
             <p className="text-slate-400 text-sm mt-1">
-              Welcome back to your Chikkundo dashboard. Let's find your perfect mid today.
+              Welcome back to your Lynqo dashboard. Connect Beyond Chats.
             </p>
           </div>
         </div>
@@ -211,7 +211,7 @@ export const HomeDashboard = () => {
           </div>
 
           <div className="mt-8 p-4 bg-brand-black/30 border border-slate-900 rounded-2xl text-[11px] text-slate-500 font-semibold leading-relaxed">
-            Note: Chikkundo enforces strict invitation approval before opening messaging. Send connect requests to match interests and chat!
+            Note: Lynqo enforces strict invitation approval before opening messaging. Send connect requests to match interests and chat!
           </div>
         </div>
       </div>

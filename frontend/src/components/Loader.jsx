@@ -7,7 +7,7 @@ export const Loader = ({ fullScreen = false }) => {
         <div className="relative flex flex-col items-center">
           <div className="w-16 h-16 rounded-full border-4 border-slate-800 border-t-brand-purple animate-spin"></div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-brand-black border border-brand-purple-light/20"></div>
-          <span className="mt-4 text-sm font-semibold text-purple-300 animate-pulse tracking-wide font-display">Chikkundo</span>
+          <span className="mt-4 text-sm font-semibold text-purple-300 animate-pulse tracking-wide font-display">Lynqo</span>
         </div>
       </div>
     );

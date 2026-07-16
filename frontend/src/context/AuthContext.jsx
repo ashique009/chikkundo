@@ -5,8 +5,8 @@ import { profileService } from '../services/profileService';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('chikkundo_token'));
-  const [username, setUsername] = useState(localStorage.getItem('chikkundo_username'));
+  const [token, setToken] = useState(localStorage.getItem('lynqo_token'));
+  const [username, setUsername] = useState(localStorage.getItem('lynqo_username'));
   const [userProfile, setUserProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
@@ -56,8 +56,8 @@ export const AuthProvider = ({ children }) => {
       const response = await authService.login(identifier, password);
       if (response.success && response.data) {
         const { token: authToken, username: userObj } = response.data;
-        localStorage.setItem('chikkundo_token', authToken);
-        localStorage.setItem('chikkundo_username', userObj);
+        localStorage.setItem('lynqo_token', authToken);
+        localStorage.setItem('lynqo_username', userObj);
         setToken(authToken);
         setUsername(userObj);
         // Fetch profile to verify profile setup status
@@ -77,8 +77,8 @@ export const AuthProvider = ({ children }) => {
       const response = await authService.signup(fullName, usernameInput, email, phone, password, confirmPassword);
       if (response.success && response.data) {
         const { token: authToken, username: userObj } = response.data;
-        localStorage.setItem('chikkundo_token', authToken);
-        localStorage.setItem('chikkundo_username', userObj);
+        localStorage.setItem('lynqo_token', authToken);
+        localStorage.setItem('lynqo_username', userObj);
         setToken(authToken);
         setUsername(userObj);
         setHasProfile(false);
@@ -104,8 +104,8 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error('Logout API failed:', err);
     } finally {
-      localStorage.removeItem('chikkundo_token');
-      localStorage.removeItem('chikkundo_username');
+      localStorage.removeItem('lynqo_token');
+      localStorage.removeItem('lynqo_username');
       setToken(null);
       setUsername(null);
       setUserProfile(null);

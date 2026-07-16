@@ -83,14 +83,14 @@ export const Sidebar = () => {
           {isAdminPath ? (
             <>
               <ShieldCheck className="w-3.5 h-3.5 text-brand-purple-light" />
-              <span className="text-brand-purple-light">Chikkundo Admin</span>
+              <span className="text-brand-purple-light">Lynqo Admin</span>
             </>
           ) : (
-            <span>Chikkundo MVP</span>
+            <span>Lynqo MVP</span>
           )}
         </div>
         <div className="text-[10px] text-slate-500 mt-1">
-          {isAdminPath ? 'System Administration' : 'Find Your Perfect Mid.'}
+          {isAdminPath ? 'System Administration' : 'Connect Beyond Chats.'}
         </div>
       </div>
     </aside>

@@ -51,7 +51,7 @@ export default function AdminLogin() {
           </div>
           
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-purple-400 via-fuchsia-500 to-indigo-400 bg-clip-text text-transparent font-display">
-            Chikkundo
+            Lynqo
           </h1>
           <div className="mt-2 flex items-center gap-1.5">
             <span className="text-[10px] tracking-wider uppercase font-bold text-slate-400 bg-brand-purple/10 border border-brand-purple/20 px-2 py-0.5 rounded">

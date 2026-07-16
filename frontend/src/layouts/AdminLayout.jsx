@@ -38,7 +38,7 @@ export const AdminLayout = () => {
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="font-extrabold text-sm tracking-tight text-white font-display uppercase">Chikkundo</h2>
+            <h2 className="font-extrabold text-sm tracking-tight text-white font-display uppercase">Lynqo</h2>
             <p className="text-[10px] text-brand-purple-light font-bold uppercase tracking-wider">Admin Console</p>
           </div>
         </div>
@@ -104,7 +104,7 @@ export const AdminLayout = () => {
           <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-purple to-pink-500 flex items-center justify-center text-white">
             <ShieldCheck className="w-5 h-5" />
           </div>
-          <span className="font-extrabold text-sm tracking-tight text-white uppercase font-display">Chikkundo Admin</span>
+          <span className="font-extrabold text-sm tracking-tight text-white uppercase font-display">Lynqo Admin</span>
         </div>
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -144,7 +144,7 @@ export const AdminLayout = () => {
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-purple to-pink-500 flex items-center justify-center text-white">
                     <ShieldCheck className="w-5 h-5" />
                   </div>
-                  <span className="font-extrabold text-sm tracking-tight text-white uppercase font-display">Chikkundo Admin</span>
+                  <span className="font-extrabold text-sm tracking-tight text-white uppercase font-display">Lynqo Admin</span>
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}

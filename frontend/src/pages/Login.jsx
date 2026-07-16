@@ -28,7 +28,7 @@ export const Login = () => {
     setLoading(false);
 
     if (result.success) {
-      showToast('Welcome back to Chikkundo!', 'success');
+      showToast('Welcome back to Lynqo!', 'success');
       navigate(from, { replace: true });
     } else {
       showToast(result.message || 'Invalid username/email or password.', 'error');

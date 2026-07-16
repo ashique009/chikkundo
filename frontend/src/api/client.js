@@ -12,7 +12,7 @@ const client = axios.create({
 // Request Interceptor: Attach Token if available
 client.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('chikkundo_token');
+    const token = localStorage.getItem('lynqo_token');
     if (token) {
       config.headers.Authorization = `Token ${token}`;
     }
@@ -35,8 +35,8 @@ client.interceptors.response.use(
 
     // Handle 401 Unauthorized (session expired or token deleted)
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      localStorage.removeItem('chikkundo_token');
-      localStorage.removeItem('chikkundo_username');
+      localStorage.removeItem('lynqo_token');
+      localStorage.removeItem('lynqo_username');
       // Redirect to login if not already there
       if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/signup') && window.location.pathname !== '/') {
         window.location.href = '/login?expired=true';

@@ -16,10 +16,10 @@ export const AuthLayout = () => {
         className="text-center mb-8 z-10"
       >
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-purple-300 to-brand-purple-light bg-clip-text text-transparent font-display m-0">
-          Chikkundo
+          Lynqo
         </h1>
         <p className="text-slate-400 text-sm mt-2 tracking-wide font-medium">
-          Find Your Perfect Mid.
+          Connect Beyond Chats.
         </p>
       </motion.div>
 

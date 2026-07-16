@@ -37,7 +37,7 @@ export const Feedback = () => {
           <span>Product Feedback</span>
         </h2>
         <p className="text-slate-400 text-xs mt-1">
-          Tell us about your experience on Chikkundo. We read all comments to refine our community circles.
+          Tell us about your experience on Lynqo. We read all comments to refine our community circles.
         </p>
       </div>
 
