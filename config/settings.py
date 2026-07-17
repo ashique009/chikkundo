@@ -143,7 +143,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://chikkundo.vercel.app",
-    "https://lynqo.vercel.app",
+    "https://lynqoweb.vercel.app",
 ]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
