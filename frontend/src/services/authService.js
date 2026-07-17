@@ -22,4 +22,15 @@ export const authService = {
   async logout() {
     return client.post('/api/auth/logout/');
   },
+
+  async forgotPassword(email) {
+    return client.post('/api/auth/forgot-password/', { email });
+  },
+
+  async resetPassword(token, newPassword) {
+    return client.post('/api/auth/reset-password/', {
+      token,
+      new_password: newPassword,
+    });
+  },
 };

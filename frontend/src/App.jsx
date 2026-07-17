@@ -20,6 +20,8 @@ import PublicRoute from "./components/PublicRoute";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import ProfileSetup from "./pages/ProfileSetup";
 import HomeDashboard from "./pages/HomeDashboard";
 import Suggestions from "./pages/Suggestions";
@@ -51,6 +53,8 @@ function App() {
             >
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
             </Route>
 
             {/* Public Guest Landing Page */}
