@@ -173,6 +173,10 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
+VAPID_PUBLIC_KEY = os.environ.get('VAPID_PUBLIC_KEY')
+VAPID_PRIVATE_KEY = os.environ.get('VAPID_PRIVATE_KEY')
+VAPID_ADMIN_EMAIL = os.environ.get('VAPID_ADMIN_EMAIL')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

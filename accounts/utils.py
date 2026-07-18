@@ -1,6 +1,8 @@
 from rest_framework.views import exception_handler
 from rest_framework.response import Response
-
+from pywebpush import webpush, WebPushException
+from django.conf import settings
+import json
 
 def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
@@ -43,7 +45,29 @@ def success_response(message="Success", data=None, status_code=200):
     }, status=status_code)
 
 from rest_framework import permissions
+def send_push_notification(user, title, body, url='/'):
+    subscriptions = user.push_subscriptions.all()
+    for sub in subscriptions:
+        try:
+            webpush(
+                subscription_info={
+                    "endpoint": sub.endpoint,
+                    "keys": {
+                        "p256dh": sub.p256dh_key,
+                        "auth": sub.auth_key,
+                    }
+                },
+                data=json.dumps({"title": title, "body": body, "url": url}),
+                vapid_private_key=settings.VAPID_PRIVATE_KEY,
+                vapid_claims={"sub": settings.VAPID_ADMIN_EMAIL}
+            )
+        except WebPushException as e:
+            # Subscription expired/invalid aayal, database il ninnu remove cheyyuka
+            if e.response is not None and e.response.status_code in [404, 410]:
+                sub.delete()
+            print(f"Push failed: {e}")
 
 class IsAdminUser(permissions.BasePermission):
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_authenticated and request.user.is_staff)
+    

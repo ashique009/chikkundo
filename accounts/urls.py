@@ -9,7 +9,7 @@ from .views import (
     ConversationListView, ConversationDetailView,
     SendMessageView, GetMessagesView,
     AdminLoginView,AdminDashboardStatsView, AdminUserListView, AdminUserBanView, AdminUserUnbanView,
-    AdminUserDeleteView,NotificationCountView,ForgotPasswordView, ResetPasswordView
+    AdminUserDeleteView,NotificationCountView,ForgotPasswordView, ResetPasswordView,PushSubscribeView, PushUnsubscribeView
 )
 
 urlpatterns = [
@@ -45,4 +45,6 @@ urlpatterns = [
     path('notifications/count/', NotificationCountView.as_view(), name='notification-count'),
     path('forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
     path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
+    path('push/subscribe/', PushSubscribeView.as_view(), name='push-subscribe'),
+    path('push/unsubscribe/', PushUnsubscribeView.as_view(), name='push-unsubscribe'),
 ]

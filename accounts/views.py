@@ -6,15 +6,15 @@ from django.contrib.auth import authenticate, get_user_model
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
-from .utils import success_response, IsAdminUser
+from .utils import success_response, IsAdminUser, send_push_notification
 
 from .serializers import (
     SignupSerializer, LoginSerializer, ProfileSerializer,
     InterestSerializer, ConnectRequestSerializer,
     ConversationSerializer, MessageSerializer,AdminUserListSerializer
 )
-from .models import Profile, Interest, ConnectRequest, Conversation, Message,PasswordResetToken
-from .utils import success_response
+from .models import Profile, Interest, ConnectRequest, Conversation, Message,PasswordResetToken,PushSubscription
+
 
 User = get_user_model()
 
@@ -132,7 +132,16 @@ class SendConnectRequestView(APIView):
     def post(self, request):
         serializer = ConnectRequestSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
-        serializer.save(sender=request.user)
+        connect_request = serializer.save(sender=request.user)
+
+        # Push notification ayakkuka receiver-nu
+        send_push_notification(
+            user=connect_request.receiver,
+            title="New connection request",
+            body=f"{request.user.full_name or request.user.username} wants to connect with you.",
+            url="/requests"
+        )
+
         return success_response(message="Connect request sent", data=serializer.data, status_code=status.HTTP_201_CREATED)
 
 #pending and sent requests views
@@ -208,7 +217,6 @@ class SuggestionsView(APIView):
         except Profile.DoesNotExist:
             return success_response(message="Please complete your profile first.", data=None, status_code=status.HTTP_400_BAD_REQUEST)
 
-        # Already connected/pending users exclude cheyyuka
         connected_or_pending_ids = ConnectRequest.objects.filter(
             models.Q(sender=request.user) | models.Q(receiver=request.user),
             status__in=['pending', 'accepted']
@@ -219,10 +227,8 @@ class SuggestionsView(APIView):
             exclude_ids.add(sender_id)
             exclude_ids.add(receiver_id)
 
-        # Base queryset — self and already interacted users mathram exclude cheyyuka
         base_queryset = Profile.objects.exclude(user_id__in=exclude_ids)
 
-        # Ippo, strict filter apply cheythu try cheyyuka (best match)
         filtered = base_queryset
         if my_profile.city:
             filtered = filtered.filter(city__iexact=my_profile.city)
@@ -233,8 +239,6 @@ class SuggestionsView(APIView):
         if my_interest_ids:
             filtered = filtered.filter(interests__id__in=my_interest_ids).distinct()
 
-        # Users kuranjathu kondu (early-stage app), strict match onnum illenkil,
-        # base queryset (ella remaining users-um) fallback aayi kaanikkuka
         if filtered.exists():
             suggestions = filtered
         else:
@@ -295,6 +299,15 @@ class SendMessageView(APIView):
 
         # Conversation-inte updated_at refresh cheyyuka (latest activity kaanikkaan)
         conversation.save()
+
+        # Push notification ayakkuka receiver-nu
+        receiver = conversation.participant_1 if conversation.participant_2 == request.user else conversation.participant_2
+        send_push_notification(
+            user=receiver,
+            title=f"New message from {request.user.full_name or request.user.username}",
+            body=content.strip()[:100],
+            url=f"/chat/{conversation.id}"
+        )
 
         serializer = MessageSerializer(message)
         return success_response(message="Message sent", data=serializer.data, status_code=status.HTTP_201_CREATED)
@@ -547,3 +560,31 @@ class ResetPasswordView(APIView):
         reset_token.save()
 
         return success_response(message="Password has been reset successfully.", data=None, status_code=status.HTTP_200_OK)
+    
+class PushSubscribeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        endpoint = request.data.get('endpoint')
+        keys = request.data.get('keys', {})
+        p256dh = keys.get('p256dh')
+        auth = keys.get('auth')
+
+        if not endpoint or not p256dh or not auth:
+            return success_response(message="Invalid subscription data.", data=None, status_code=status.HTTP_400_BAD_REQUEST)
+
+        PushSubscription.objects.update_or_create(
+            user=request.user,
+            endpoint=endpoint,
+            defaults={'p256dh_key': p256dh, 'auth_key': auth}
+        )
+        return success_response(message="Subscribed to push notifications.", data=None, status_code=status.HTTP_201_CREATED)
+
+
+class PushUnsubscribeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        endpoint = request.data.get('endpoint')
+        PushSubscription.objects.filter(user=request.user, endpoint=endpoint).delete()
+        return success_response(message="Unsubscribed from push notifications.", data=None, status_code=status.HTTP_200_OK)
