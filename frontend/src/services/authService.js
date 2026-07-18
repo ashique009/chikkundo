@@ -33,4 +33,17 @@ export const authService = {
       new_password: newPassword,
     });
   },
+
+  async subscribePush(endpoint, keys) {
+    return client.post('/api/auth/push/subscribe/', {
+      endpoint,
+      keys,
+    });
+  },
+
+  async unsubscribePush(endpoint) {
+    return client.post('/api/auth/push/unsubscribe/', {
+      endpoint,
+    });
+  },
 };

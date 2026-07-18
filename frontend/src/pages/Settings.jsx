@@ -3,9 +3,27 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { profileService } from '../services/profileService';
+import { authService } from '../services/authService';
 import Loader from '../components/Loader';
-import { Upload, Check, Save, LogOut } from 'lucide-react';
+import { Upload, Check, Save, LogOut, Bell, BellOff } from 'lucide-react';
 import { API_BASE_URL } from '../api/client';
+
+const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY || 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEPnu7zavRd5uE0kvY8TRwZ0sKwa/fMPyI2RNenZuVTBPqut+bjrCz/DlzFsyowsmwZN/HpN7Crqq1B44j15gpzw==';
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding)
+    .replace(/-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
 
 export const Settings = () => {
   const { userProfile, refreshProfile, logout } = useAuth();
@@ -26,6 +44,78 @@ export const Settings = () => {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [loadingPush, setLoadingPush] = useState(false);
+  const [swSupported, setSwSupported] = useState(false);
+
+  useEffect(() => {
+    const checkPushSubscription = async () => {
+      if ('serviceWorker' in navigator && 'PushManager' in window) {
+        setSwSupported(true);
+        try {
+          const registration = await navigator.serviceWorker.ready;
+          const subscription = await registration.pushManager.getSubscription();
+          setIsSubscribed(!!subscription);
+        } catch (error) {
+          console.error('Error checking push subscription status:', error);
+        }
+      }
+    };
+    checkPushSubscription();
+  }, []);
+
+  const handlePushToggle = async () => {
+    if (!swSupported) {
+      showToast('Push notifications are not supported on this browser.', 'error');
+      return;
+    }
+
+    setLoadingPush(true);
+    try {
+      if (isSubscribed) {
+        const registration = await navigator.serviceWorker.ready;
+        const subscription = await registration.pushManager.getSubscription();
+        if (subscription) {
+          await authService.unsubscribePush(subscription.endpoint);
+          await subscription.unsubscribe();
+          setIsSubscribed(false);
+          showToast('Unsubscribed from push notifications.', 'info');
+        } else {
+          setIsSubscribed(false);
+        }
+      } else {
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          showToast('Permission for notifications was denied.', 'error');
+          setLoadingPush(false);
+          return;
+        }
+
+        const registration = await navigator.serviceWorker.ready;
+        const applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: applicationServerKey
+        });
+
+        const subJson = subscription.toJSON();
+        const payloadKeys = {
+          p256dh: subJson.keys?.p256dh,
+          auth: subJson.keys?.auth
+        };
+
+        await authService.subscribePush(subscription.endpoint, payloadKeys);
+        setIsSubscribed(true);
+        showToast('Successfully subscribed to push notifications!', 'success');
+      }
+    } catch (err) {
+      console.error('Error toggling push notifications:', err);
+      showToast(err.message || 'Failed to update push notification subscription.', 'error');
+    } finally {
+      setLoadingPush(false);
+    }
+  };
 
   useEffect(() => {
     const initializeForm = async () => {
@@ -319,8 +409,62 @@ export const Settings = () => {
           </form>
         </div>
 
-        {/* Sidebar Log Out Card */}
+        {/* Sidebar Cards */}
         <div className="space-y-6">
+          {/* Push Notifications Card */}
+          <div className="glass-panel p-6 rounded-3xl border border-brand-purple/10 bg-brand-dark/15 flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-brand-purple/10 border border-brand-purple/20">
+                {isSubscribed ? (
+                  <Bell className="w-5 h-5 text-brand-purple-light" />
+                ) : (
+                  <BellOff className="w-5 h-5 text-slate-400" />
+                )}
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-200">Push Notifications</h3>
+                <span className="text-[10px] text-slate-500 font-semibold uppercase">
+                  {swSupported ? (isSubscribed ? 'Enabled' : 'Disabled') : 'Not Supported'}
+                </span>
+              </div>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Get real-time updates when you receive connect requests or new direct messages.
+            </p>
+            
+            {swSupported ? (
+              <button
+                type="button"
+                onClick={handlePushToggle}
+                disabled={loadingPush}
+                className={`w-full font-bold py-3 rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-xs border ${
+                  isSubscribed
+                    ? 'bg-brand-black/35 hover:bg-rose-500/10 text-slate-300 hover:text-rose-400 border-slate-800 hover:border-rose-500/30'
+                    : 'bg-brand-purple hover:bg-brand-purple-dark text-white border-brand-purple-light/20 shadow-md shadow-brand-purple/10'
+                }`}
+              >
+                {loadingPush ? (
+                  <div className="w-4 h-4 rounded-full border-2 border-white/20 border-t-white animate-spin"></div>
+                ) : isSubscribed ? (
+                  <>
+                    <BellOff className="w-4 h-4" />
+                    <span>Disable Notifications</span>
+                  </>
+                ) : (
+                  <>
+                    <Bell className="w-4 h-4" />
+                    <span>Enable Notifications</span>
+                  </>
+                )}
+              </button>
+            ) : (
+              <div className="text-center text-xs font-semibold text-slate-500 py-2 border border-dashed border-slate-800 rounded-xl bg-brand-black/20">
+                Service Worker not supported in this browser.
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar Log Out Card */}
           <div className="glass-panel p-6 rounded-3xl border border-brand-purple/10 bg-brand-dark/15 flex flex-col gap-4">
             <h3 className="text-sm font-bold text-slate-200">Account Actions</h3>
             <p className="text-xs text-slate-400 leading-relaxed">
