@@ -151,6 +151,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 import cloudinary
 
+print("DEBUG CLOUD NAME:", repr(os.environ.get('CLOUDINARY_CLOUD_NAME')))
+print("DEBUG API KEY:", repr(os.environ.get('CLOUDINARY_API_KEY')))
+
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('csmiytcb'),
     'API_KEY': os.environ.get('438434336418421'),
