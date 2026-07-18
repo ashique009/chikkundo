@@ -42,11 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
     'accounts',
     'corsheaders',
+    'cloudinary',
 ]
 AUTH_USER_MODEL = "accounts.User"
 
@@ -147,7 +149,15 @@ CORS_ALLOWED_ORIGINS = [
 ]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+import cloudinary
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('csmiytcb'),
+    'API_KEY': os.environ.get('438434336418421'),
+    'API_SECRET': os.environ.get('TZxbhVaKDdhaiVN5ojln39woep4'),
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
