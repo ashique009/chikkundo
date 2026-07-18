@@ -157,7 +157,14 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.environ.get('TZxbhVaKDdhaiVN5ojln39woep4'),
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
