@@ -149,8 +149,8 @@ CORS_ALLOWED_ORIGINS = [
 ]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-import cloudinary
 
+import cloudinary
 print("DEBUG CLOUD NAME:", repr(os.environ.get('CLOUDINARY_CLOUD_NAME')))
 print("DEBUG API KEY:", repr(os.environ.get('CLOUDINARY_API_KEY')))
 
@@ -159,7 +159,12 @@ CLOUDINARY_STORAGE = {
     'API_KEY': os.environ.get('438434336418421'),
     'API_SECRET': os.environ.get('TZxbhVaKDdhaiVN5ojln39woep4'),
 }
-
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
+    secure=True
+)
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
