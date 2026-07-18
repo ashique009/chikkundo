@@ -8,7 +8,7 @@ import Loader from '../components/Loader';
 import { Upload, Check, Save, LogOut, Bell, BellOff } from 'lucide-react';
 import { API_BASE_URL } from '../api/client';
 
-const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY || 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEPnu7zavRd5uE0kvY8TRwZ0sKwa/fMPyI2RNenZuVTBPqut+bjrCz/DlzFsyowsmwZN/HpN7Crqq1B44j15gpzw==';
+const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY || 'BD57u82r0XebhNJL2PE0cGdLCsGv3zD8iNkTXp2blUwT6rrfm46ws_w5cxbMqMLJsGTfx6Tewq6qtQeOI9eYKc8';
 
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
