@@ -217,6 +217,7 @@ class SuggestionsView(APIView):
         except Profile.DoesNotExist:
             return success_response(message="Please complete your profile first.", data=None, status_code=status.HTTP_400_BAD_REQUEST)
 
+        
         connected_or_pending_ids = ConnectRequest.objects.filter(
             models.Q(sender=request.user) | models.Q(receiver=request.user),
             status__in=['pending', 'accepted']
@@ -227,22 +228,8 @@ class SuggestionsView(APIView):
             exclude_ids.add(sender_id)
             exclude_ids.add(receiver_id)
 
-        base_queryset = Profile.objects.exclude(user_id__in=exclude_ids)
-
-        filtered = base_queryset
-        if my_profile.city:
-            filtered = filtered.filter(city__iexact=my_profile.city)
-        if my_profile.looking_for:
-            filtered = filtered.filter(looking_for=my_profile.looking_for)
-
-        my_interest_ids = my_profile.interests.values_list('id', flat=True)
-        if my_interest_ids:
-            filtered = filtered.filter(interests__id__in=my_interest_ids).distinct()
-
-        if filtered.exists():
-            suggestions = filtered
-        else:
-            suggestions = base_queryset
+        
+        suggestions = Profile.objects.exclude(user_id__in=exclude_ids)
 
         serializer = ProfileSerializer(suggestions, many=True)
         return success_response(message="Suggestions fetched successfully", data=serializer.data, status_code=status.HTTP_200_OK)
