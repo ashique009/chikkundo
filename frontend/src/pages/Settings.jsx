@@ -5,7 +5,7 @@ import { useToast } from '../context/ToastContext';
 import { profileService } from '../services/profileService';
 import { authService } from '../services/authService';
 import Loader from '../components/Loader';
-import { Upload, Check, Save, LogOut, Bell, BellOff } from 'lucide-react';
+import { Upload, Check, Save, LogOut, Bell, BellOff, Download } from 'lucide-react';
 import { API_BASE_URL } from '../api/client';
 
 const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY || 'BD57u82r0XebhNJL2PE0cGdLCsGv3zD8iNkTXp2blUwT6rrfm46ws_w5cxbMqMLJsGTfx6Tewq6qtQeOI9eYKc8';
@@ -49,6 +49,12 @@ export const Settings = () => {
   const [loadingPush, setLoadingPush] = useState(false);
   const [swSupported, setSwSupported] = useState(false);
 
+  // PWA installation states
+  const [deferredPrompt, setDeferredPrompt] = useState(window.deferredPrompt || null);
+  const [showInstallButton, setShowInstallButton] = useState(!!window.deferredPrompt);
+  const [showIosFallback, setShowIosFallback] = useState(false);
+  const [isAlreadyInstalled, setIsAlreadyInstalled] = useState(false);
+
   useEffect(() => {
     const checkPushSubscription = async () => {
       if ('serviceWorker' in navigator && 'PushManager' in window) {
@@ -64,6 +70,84 @@ export const Settings = () => {
     };
     checkPushSubscription();
   }, []);
+
+  useEffect(() => {
+    // Check if the app is already installed or running in standalone mode
+    const checkStandalone = () => {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      setIsAlreadyInstalled(isStandalone);
+    };
+    checkStandalone();
+
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      window.deferredPrompt = e;
+      setDeferredPrompt(e);
+      setShowInstallButton(true);
+      setShowIosFallback(false);
+    };
+
+    const handleAppInstalled = () => {
+      window.deferredPrompt = null;
+      setDeferredPrompt(null);
+      setShowInstallButton(false);
+      setIsAlreadyInstalled(true);
+      showToast('Lynqo has been successfully installed!', 'success');
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    if (window.deferredPrompt) {
+      setDeferredPrompt(window.deferredPrompt);
+      setShowInstallButton(true);
+    } else {
+      // If we are not already in standalone mode, show fallback text after 4 seconds if prompt doesn't fire
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      if (!isStandalone) {
+        const timer = setTimeout(() => {
+          if (!window.deferredPrompt) {
+            setShowIosFallback(true);
+          }
+        }, 4000);
+        return () => {
+          clearTimeout(timer);
+          window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+          window.removeEventListener('appinstalled', handleAppInstalled);
+        };
+      }
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, [showToast]);
+
+  const handleInstallClick = async () => {
+    const promptEvent = deferredPrompt || window.deferredPrompt;
+    if (!promptEvent) {
+      showToast('Install prompt is not available.', 'error');
+      return;
+    }
+
+    promptEvent.prompt();
+
+    try {
+      const { outcome } = await promptEvent.userChoice;
+      if (outcome === 'accepted') {
+        showToast('Thank you for installing Lynqo!', 'success');
+        setShowInstallButton(false);
+        setDeferredPrompt(null);
+        window.deferredPrompt = null;
+      } else {
+        showToast('Installation prompt dismissed.', 'info');
+      }
+    } catch (err) {
+      console.error('Error during PWA installation:', err);
+      showToast('Failed to trigger installation.', 'error');
+    }
+  };
 
   const handlePushToggle = async () => {
     if (!swSupported) {
@@ -463,6 +547,41 @@ export const Settings = () => {
               </div>
             )}
           </div>
+
+          {/* Install App Card */}
+          {!isAlreadyInstalled && (showInstallButton || showIosFallback) && (
+            <div className="glass-panel p-6 rounded-3xl border border-brand-purple/10 bg-brand-dark/15 flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-brand-purple/10 border border-brand-purple/20">
+                  <Download className="w-5 h-5 text-brand-purple-light" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-200">Install App</h3>
+                  <span className="text-[10px] text-slate-500 font-semibold uppercase">
+                    PWA Support
+                  </span>
+                </div>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Install Lynqo on your device for a fast, full-screen, native experience.
+              </p>
+              
+              {showInstallButton ? (
+                <button
+                  type="button"
+                  onClick={handleInstallClick}
+                  className="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-bold py-3 rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-xs border border-brand-purple-light/20 shadow-md shadow-brand-purple/10"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Install Lynqo</span>
+                </button>
+              ) : showIosFallback ? (
+                <div className="text-slate-400 text-xs py-2 px-3 border border-brand-purple/15 rounded-xl bg-brand-purple/5 text-center font-medium leading-relaxed">
+                  On iPhone: tap <span className="text-brand-purple-light font-bold">Share</span>, then <span className="text-brand-purple-light font-bold">'Add to Home Screen'</span>
+                </div>
+              ) : null}
+            </div>
+          )}
 
           {/* Sidebar Log Out Card */}
           <div className="glass-panel p-6 rounded-3xl border border-brand-purple/10 bg-brand-dark/15 flex flex-col gap-4">
