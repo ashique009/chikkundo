@@ -9,7 +9,8 @@ from .views import (
     ConversationListView, ConversationDetailView,
     SendMessageView, GetMessagesView,
     AdminLoginView,AdminDashboardStatsView, AdminUserListView, AdminUserBanView, AdminUserUnbanView,
-    AdminUserDeleteView,NotificationCountView,ForgotPasswordView, ResetPasswordView,PushSubscribeView, PushUnsubscribeView,OnlineStatusView
+    AdminUserDeleteView,NotificationCountView,ForgotPasswordView, ResetPasswordView,PushSubscribeView, PushUnsubscribeView,OnlineStatusView,
+    TypingIndicatorView, TypingStatusView
 )
 
 urlpatterns = [
@@ -48,4 +49,6 @@ urlpatterns = [
     path('push/subscribe/', PushSubscribeView.as_view(), name='push-subscribe'),
     path('push/unsubscribe/', PushUnsubscribeView.as_view(), name='push-unsubscribe'),
     path('online-status/<int:user_id>/', OnlineStatusView.as_view(), name='online-status'),
+    path('messages/typing/', TypingIndicatorView.as_view(), name='typing-indicator'),
+    path('messages/typing-status/<int:conversation_id>/', TypingStatusView.as_view(), name='typing-status'),
 ]

@@ -160,3 +160,11 @@ class PushSubscription(models.Model):
 
     class Meta:
         unique_together = ('user', 'endpoint')
+
+class TypingStatus(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='typing_statuses')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('conversation', 'user')

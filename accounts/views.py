@@ -596,3 +596,43 @@ class OnlineStatusView(APIView):
             "last_seen": user.last_seen
         }
         return success_response(message="Online status fetched", data=data, status_code=status.HTTP_200_OK)
+
+
+class TypingIndicatorView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        conversation_id = request.data.get('conversation_id')
+        try:
+            conversation = Conversation.objects.get(id=conversation_id)
+        except Conversation.DoesNotExist:
+            return success_response(message="Conversation not found.", data=None, status_code=status.HTTP_404_NOT_FOUND)
+
+        if request.user != conversation.participant_1 and request.user != conversation.participant_2:
+            return success_response(message="You are not part of this conversation.", data=None, status_code=status.HTTP_403_FORBIDDEN)
+
+        TypingStatus.objects.update_or_create(
+            conversation=conversation,
+            user=request.user
+        )
+        return success_response(message="Typing status updated.", data=None, status_code=status.HTTP_200_OK)
+
+
+class TypingStatusView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, conversation_id):
+        try:
+            conversation = Conversation.objects.get(id=conversation_id)
+        except Conversation.DoesNotExist:
+            return success_response(message="Conversation not found.", data=None, status_code=status.HTTP_404_NOT_FOUND)
+
+        other_user = conversation.participant_1 if conversation.participant_2 == request.user else conversation.participant_2
+
+        is_typing = False
+        typing_status = TypingStatus.objects.filter(conversation=conversation, user=other_user).first()
+        if typing_status:
+            time_diff = timezone.now() - typing_status.updated_at
+            is_typing = time_diff.total_seconds() < 4  # 4 seconds il signal undenkil "typing"
+
+        return success_response(message="Typing status fetched", data={"is_typing": is_typing}, status_code=status.HTTP_200_OK)
