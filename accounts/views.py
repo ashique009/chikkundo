@@ -575,3 +575,24 @@ class PushUnsubscribeView(APIView):
         endpoint = request.data.get('endpoint')
         PushSubscription.objects.filter(user=request.user, endpoint=endpoint).delete()
         return success_response(message="Unsubscribed from push notifications.", data=None, status_code=status.HTTP_200_OK)
+
+class OnlineStatusView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return success_response(message="User not found.", data=None, status_code=status.HTTP_404_NOT_FOUND)
+
+        is_online = False
+        if user.last_seen:
+            time_diff = timezone.now() - user.last_seen
+            is_online = time_diff.total_seconds() < 90  # 90 seconds il activity undenkil "online"
+
+        data = {
+            "user_id": user.id,
+            "is_online": is_online,
+            "last_seen": user.last_seen
+        }
+        return success_response(message="Online status fetched", data=data, status_code=status.HTTP_200_OK)
