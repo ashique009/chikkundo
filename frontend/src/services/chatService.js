@@ -29,5 +29,15 @@ export const chatService = {
   async getTypingStatus(conversationId) {
     return client.get(`/api/auth/messages/typing-status/${conversationId}/`);
   },
+
+  async editMessage(messageId, content) {
+    return client.put(`/api/auth/messages/${messageId}/edit/`, {
+      content: content,
+    });
+  },
+
+  async deleteMessage(messageId) {
+    return client.delete(`/api/auth/messages/${messageId}/delete/`);
+  },
 };
 export default chatService;
