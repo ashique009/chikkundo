@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { chatService } from '../services/chatService';
+import { authService } from '../services/authService';
+import { formatRelativeTime } from '../utils/timeUtils';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import Loader from '../components/Loader';
-import { Send, ArrowLeft, User, ShieldAlert } from 'lucide-react';
+import { Send, ArrowLeft, User } from 'lucide-react';
 
 export const Chat = () => {
   const { conversationId } = useParams();
@@ -14,12 +16,26 @@ export const Chat = () => {
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [onlineStatus, setOnlineStatus] = useState(null);
   
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
 
   const messagesEndRef = useRef(null);
   const pollingTimerRef = useRef(null);
+  const statusTimerRef = useRef(null);
+
+  const fetchOnlineStatus = async (partnerId) => {
+    if (!partnerId) return;
+    try {
+      const res = await authService.getOnlineStatus(partnerId);
+      if (res && res.success && res.data) {
+        setOnlineStatus(res.data);
+      }
+    } catch (err) {
+      // Ignore background status polling errors
+    }
+  };
 
   const fetchChatDetails = async (isPoll = false) => {
     try {
@@ -58,9 +74,10 @@ export const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Initial load
+  // Initial load & message polling
   useEffect(() => {
     setLoading(true);
+    setOnlineStatus(null);
     fetchChatDetails();
 
     // Start polling every 3 seconds for messages
@@ -74,6 +91,24 @@ export const Chat = () => {
       }
     };
   }, [conversationId]);
+
+  // Online status polling every 15 seconds
+  useEffect(() => {
+    const partnerId = conversation?.other_participant?.id;
+    if (!partnerId) return;
+
+    fetchOnlineStatus(partnerId);
+
+    statusTimerRef.current = setInterval(() => {
+      fetchOnlineStatus(partnerId);
+    }, 15000);
+
+    return () => {
+      if (statusTimerRef.current) {
+        clearInterval(statusTimerRef.current);
+      }
+    };
+  }, [conversation?.other_participant?.id]);
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -126,13 +161,37 @@ export const Chat = () => {
             <ArrowLeft className="w-5 h-5" />
           </Link>
           
-          <div className="w-9 h-9 rounded-full bg-brand-purple/15 flex items-center justify-center border border-brand-purple/25 text-brand-purple-light text-xs font-bold uppercase">
-            {partner.username ? partner.username.substring(0, 2) : 'CK'}
+          <div className="relative">
+            <div className="w-9 h-9 rounded-full bg-brand-purple/15 flex items-center justify-center border border-brand-purple/25 text-brand-purple-light text-xs font-bold uppercase">
+              {partner.username ? partner.username.substring(0, 2) : 'CK'}
+            </div>
+            {onlineStatus?.is_online && (
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950" />
+            )}
           </div>
 
           <div className="text-left">
             <h3 className="text-sm font-bold text-slate-200">{partner.full_name}</h3>
-            <span className="text-[10px] text-slate-500 font-semibold">@{partner.username}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-slate-500 font-semibold">@{partner.username}</span>
+              {onlineStatus && (
+                <div className="flex items-center gap-1">
+                  {onlineStatus.is_online ? (
+                    <>
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                      <span className="text-[10px] text-emerald-400 font-semibold">Online</span>
+                    </>
+                  ) : onlineStatus.last_seen ? (
+                    <>
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-500 inline-block" />
+                      <span className="text-[10px] text-slate-400">
+                        Last seen {formatRelativeTime(onlineStatus.last_seen)}
+                      </span>
+                    </>
+                  ) : null}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

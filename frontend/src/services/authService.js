@@ -46,4 +46,8 @@ export const authService = {
       endpoint,
     });
   },
+
+  async getOnlineStatus(userId) {
+    return client.get(`/api/auth/online-status/${userId}/`);
+  },
 };

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { chatService } from '../services/chatService';
+import { authService } from '../services/authService';
 import { useToast } from '../context/ToastContext';
 import Loader from '../components/Loader';
 import EmptyState from '../components/EmptyState';
-import { MessageSquare, MessageCircle, ChevronRight, User } from 'lucide-react';
+import { MessageSquare, MessageCircle, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const ConversationList = () => {
   const [conversations, setConversations] = useState([]);
+  const [onlineStatuses, setOnlineStatuses] = useState({});
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
 
@@ -18,6 +20,24 @@ export const ConversationList = () => {
         const response = await chatService.getConversations();
         if (response.success && response.data) {
           setConversations(response.data);
+
+          // Fetch online statuses in parallel for participants
+          response.data.forEach(async (convo) => {
+            const partnerId = convo.other_participant?.id;
+            if (partnerId) {
+              try {
+                const statusRes = await authService.getOnlineStatus(partnerId);
+                if (statusRes?.success && statusRes.data) {
+                  setOnlineStatuses((prev) => ({
+                    ...prev,
+                    [partnerId]: statusRes.data.is_online,
+                  }));
+                }
+              } catch (e) {
+                // Ignore silent background status fetch error
+              }
+            }
+          });
         }
       } catch (err) {
         showToast('Failed to fetch conversation list.', 'error');
@@ -63,6 +83,8 @@ export const ConversationList = () => {
           {conversations.map((convo, index) => {
             const partner = convo.other_participant || {};
             const lastMsg = convo.last_message;
+            const isOnline = onlineStatuses[partner.id];
+
             return (
               <motion.div
                 key={convo.id}
@@ -75,8 +97,13 @@ export const ConversationList = () => {
                   className="glass-panel p-4 rounded-xl border border-brand-purple/10 flex items-center justify-between gap-4 bg-brand-dark/15 hover:border-brand-purple/35 hover:bg-brand-purple/5 transition-all duration-300 group cursor-pointer shadow-md"
                 >
                   <div className="flex items-center gap-3.5 min-w-0 flex-grow">
-                    <div className="w-11 h-11 rounded-full bg-brand-purple/15 flex items-center justify-center border border-brand-purple/25 text-brand-purple-light text-sm font-extrabold uppercase flex-shrink-0">
-                      {partner.username ? partner.username.substring(0, 2) : 'CK'}
+                    <div className="relative flex-shrink-0">
+                      <div className="w-11 h-11 rounded-full bg-brand-purple/15 flex items-center justify-center border border-brand-purple/25 text-brand-purple-light text-sm font-extrabold uppercase">
+                        {partner.username ? partner.username.substring(0, 2) : 'CK'}
+                      </div>
+                      {isOnline && (
+                        <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-slate-950" />
+                      )}
                     </div>
 
                     <div className="min-w-0 flex-grow">
