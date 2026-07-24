@@ -19,5 +19,15 @@ export const chatService = {
       content: content,
     });
   },
+
+  async sendTypingSignal(conversationId) {
+    return client.post('/api/auth/messages/typing/', {
+      conversation_id: conversationId,
+    });
+  },
+
+  async getTypingStatus(conversationId) {
+    return client.get(`/api/auth/messages/typing-status/${conversationId}/`);
+  },
 };
 export default chatService;

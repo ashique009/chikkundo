@@ -17,6 +17,7 @@ export const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [onlineStatus, setOnlineStatus] = useState(null);
+  const [isPartnerTyping, setIsPartnerTyping] = useState(false);
   
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -24,6 +25,8 @@ export const Chat = () => {
   const messagesEndRef = useRef(null);
   const pollingTimerRef = useRef(null);
   const statusTimerRef = useRef(null);
+  const typingStatusTimerRef = useRef(null);
+  const lastTypingSentRef = useRef(0);
 
   const fetchOnlineStatus = async (partnerId) => {
     if (!partnerId) return;
@@ -78,6 +81,7 @@ export const Chat = () => {
   useEffect(() => {
     setLoading(true);
     setOnlineStatus(null);
+    setIsPartnerTyping(false);
     fetchChatDetails();
 
     // Start polling every 3 seconds for messages
@@ -110,10 +114,47 @@ export const Chat = () => {
     };
   }, [conversation?.other_participant?.id]);
 
-  // Scroll to bottom on new messages
+  // Typing status polling every 2 seconds
+  useEffect(() => {
+    if (!conversationId) return;
+
+    const fetchTypingStatus = async () => {
+      try {
+        const res = await chatService.getTypingStatus(conversationId);
+        if (res && res.success && res.data) {
+          setIsPartnerTyping(!!res.data.is_typing);
+        }
+      } catch (err) {
+        // Ignore background typing status polling error
+      }
+    };
+
+    fetchTypingStatus();
+
+    typingStatusTimerRef.current = setInterval(fetchTypingStatus, 2000);
+
+    return () => {
+      if (typingStatusTimerRef.current) {
+        clearInterval(typingStatusTimerRef.current);
+      }
+    };
+  }, [conversationId]);
+
+  // Scroll to bottom on new messages or typing state change
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isPartnerTyping]);
+
+  const handleInputChange = (e) => {
+    setNewMessage(e.target.value);
+
+    // Throttled typing signal (at most once every 2.5s while typing)
+    const now = Date.now();
+    if (now - lastTypingSentRef.current >= 2500) {
+      lastTypingSentRef.current = now;
+      chatService.sendTypingSignal(conversationId).catch(() => {});
+    }
+  };
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -174,7 +215,16 @@ export const Chat = () => {
             <h3 className="text-sm font-bold text-slate-200">{partner.full_name}</h3>
             <div className="flex items-center gap-2">
               <span className="text-[10px] text-slate-500 font-semibold">@{partner.username}</span>
-              {onlineStatus && (
+              {isPartnerTyping ? (
+                <div className="flex items-center gap-1 text-[10px] text-brand-purple-light font-semibold">
+                  <span className="animate-pulse">typing</span>
+                  <span className="flex gap-0.5 items-center">
+                    <span className="w-1 h-1 rounded-full bg-brand-purple-light animate-bounce [animation-delay:-0.3s]" />
+                    <span className="w-1 h-1 rounded-full bg-brand-purple-light animate-bounce [animation-delay:-0.15s]" />
+                    <span className="w-1 h-1 rounded-full bg-brand-purple-light animate-bounce" />
+                  </span>
+                </div>
+              ) : onlineStatus ? (
                 <div className="flex items-center gap-1">
                   {onlineStatus.is_online ? (
                     <>
@@ -190,7 +240,7 @@ export const Chat = () => {
                     </>
                   ) : null}
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         </div>
@@ -235,6 +285,21 @@ export const Chat = () => {
             );
           })
         )}
+
+        {/* WhatsApp-style typing indicator bubble in message area */}
+        {isPartnerTyping && (
+          <div className="flex w-full justify-start animate-fade-in">
+            <div className="bg-brand-black/60 text-slate-400 px-4 py-2 rounded-2xl rounded-bl-none border border-slate-800 flex items-center gap-2 text-xs shadow-sm">
+              <span className="text-brand-purple-light font-medium text-[11px]">{partner.full_name || partner.username} is typing</span>
+              <span className="flex gap-1 items-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-purple-light animate-bounce [animation-delay:-0.3s]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-purple-light animate-bounce [animation-delay:-0.15s]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-purple-light animate-bounce" />
+              </span>
+            </div>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -248,7 +313,7 @@ export const Chat = () => {
           className="flex-grow glass-input px-4 py-3 rounded-xl text-sm"
           placeholder="Type your message..."
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+          onChange={handleInputChange}
           disabled={sending}
           required
         />
@@ -265,3 +330,4 @@ export const Chat = () => {
 };
 
 export default Chat;
+

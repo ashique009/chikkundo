@@ -13,7 +13,7 @@ from .serializers import (
     InterestSerializer, ConnectRequestSerializer,
     ConversationSerializer, MessageSerializer,AdminUserListSerializer
 )
-from .models import Profile, Interest, ConnectRequest, Conversation, Message,PasswordResetToken,PushSubscription
+from .models import Profile, Interest, ConnectRequest, Conversation, Message,PasswordResetToken,PushSubscription,TypingStatus
 
 
 User = get_user_model()
