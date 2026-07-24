@@ -323,8 +323,8 @@ export const Settings = () => {
   return (
     <div className="space-y-6 text-left max-w-3xl mx-auto">
       <div>
-        <h2 className="text-2xl font-extrabold font-display text-slate-100">Settings</h2>
-        <p className="text-slate-400 text-xs mt-1">
+        <h2 className="text-2xl font-extrabold font-display text-[#2C2C2A] dark:text-slate-100">Settings</h2>
+        <p className="text-[#5F5E5A] dark:text-slate-400 text-xs mt-1">
           Update your location, profile biography, and connection tags here.
         </p>
       </div>
@@ -332,15 +332,15 @@ export const Settings = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Settings Form */}
         <div className="lg:col-span-2 space-y-6">
-          <form onSubmit={handleSave} className="glass-panel p-6 md:p-8 rounded-3xl border border-brand-purple/10 bg-brand-dark/15 space-y-6">
+          <form onSubmit={handleSave} className="glass-panel p-6 md:p-8 rounded-3xl border border-[#F4C0D1] dark:border-brand-purple/10 bg-white dark:bg-brand-dark/15 space-y-6 transition-colors duration-200">
             
             {/* Profile Pic Upload */}
-            <div className="flex flex-col sm:flex-row items-center gap-5 border-b border-slate-900 pb-6">
-              <div className="relative w-20 h-20 rounded-full border border-slate-800 flex items-center justify-center overflow-hidden bg-brand-black/40 group flex-shrink-0">
+            <div className="flex flex-col sm:flex-row items-center gap-5 border-b border-[#F4C0D1] dark:border-slate-900 pb-6">
+              <div className="relative w-20 h-20 rounded-full border border-[#F4C0D1] dark:border-slate-800 flex items-center justify-center overflow-hidden bg-[#FCEEF3] dark:bg-brand-black/40 group flex-shrink-0">
                 {picturePreview ? (
                   <img src={picturePreview} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
-                  <Upload className="w-5 h-5 text-slate-500" />
+                  <Upload className="w-5 h-5 text-[#5F5E5A] dark:text-slate-500" />
                 )}
                 <input
                   type="file"
@@ -352,15 +352,15 @@ export const Settings = () => {
               </div>
               
               <div className="text-center sm:text-left">
-                <div className="text-sm font-bold text-slate-200">Change Profile Image</div>
-                <div className="text-xs text-slate-500 mt-1">Upload a clear photo to help matches recognize you.</div>
+                <div className="text-sm font-bold text-[#2C2C2A] dark:text-slate-200">Change Profile Image</div>
+                <div className="text-xs text-[#5F5E5A] dark:text-slate-500 mt-1">Upload a clear photo to help matches recognize you.</div>
               </div>
             </div>
 
             {/* Location & Looking For */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">City</label>
+                <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">City</label>
                 <input
                   type="text"
                   className="glass-input p-3 rounded-xl text-sm"
@@ -372,7 +372,7 @@ export const Settings = () => {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">State</label>
+                <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">State</label>
                 <input
                   type="text"
                   className="glass-input p-3 rounded-xl text-sm"
@@ -384,7 +384,7 @@ export const Settings = () => {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">Pincode</label>
+                <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Pincode</label>
                 <input
                   type="text"
                   className="glass-input p-3 rounded-xl text-sm"
@@ -396,9 +396,9 @@ export const Settings = () => {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">Looking For</label>
+                <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Looking For</label>
                 <select
-                  className="glass-input p-3 rounded-xl text-sm w-full bg-brand-black/90"
+                  className="glass-input p-3 rounded-xl text-sm w-full bg-white dark:bg-brand-black/90 text-[#2C2C2A] dark:text-slate-200"
                   value={lookingFor}
                   onChange={(e) => setLookingFor(e.target.value)}
                   disabled={saving}
@@ -411,7 +411,7 @@ export const Settings = () => {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-400">Address</label>
+              <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Address</label>
               <input
                 type="text"
                 className="glass-input p-3 rounded-xl text-sm"
@@ -423,7 +423,7 @@ export const Settings = () => {
 
             {/* Bio */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-400">Biography</label>
+              <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Biography</label>
               <textarea
                 className="glass-input p-3 rounded-xl text-sm min-h-24 resize-none"
                 value={bio}
@@ -434,12 +434,12 @@ export const Settings = () => {
             </div>
 
             {/* Interests checklist */}
-            <div className="flex flex-col gap-3 text-left border-t border-slate-900 pt-6">
+            <div className="flex flex-col gap-3 text-left border-t border-[#F4C0D1] dark:border-slate-900 pt-6">
               <div className="flex justify-between items-end pb-1">
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400 uppercase tracking-wider">
                   Update Interests
                 </label>
-                <span className="text-[10px] font-bold text-brand-purple-light uppercase">
+                <span className="text-[10px] font-bold text-[#D4537E] dark:text-brand-purple-light uppercase">
                   {selectedInterests.length} selected (Requires 3-10)
                 </span>
               </div>
@@ -447,7 +447,7 @@ export const Settings = () => {
               <div className="space-y-5 max-h-[250px] overflow-y-auto pr-1">
                 {Object.keys(groupedInterests).map((category) => (
                   <div key={category} className="space-y-1.5">
-                    <div className="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest">
+                    <div className="text-[9px] font-extrabold text-[#5F5E5A] dark:text-slate-500 uppercase tracking-widest">
                       {category}
                     </div>
                     <div className="flex flex-wrap gap-1.5">
@@ -461,8 +461,8 @@ export const Settings = () => {
                             disabled={saving}
                             className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all duration-200 cursor-pointer border ${
                               isSelected
-                                ? 'bg-brand-purple text-white border-brand-purple-light shadow-sm'
-                                : 'bg-brand-black/30 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700'
+                                ? 'bg-[#D4537E] text-white border-transparent shadow-xs dark:bg-brand-purple dark:border-brand-purple-light'
+                                : 'bg-[#FCEEF3] text-[#2C2C2A] dark:bg-brand-black/30 dark:text-slate-400 border-[#F4C0D1] dark:border-slate-800 hover:border-[#D4537E]'
                             }`}
                           >
                             {isSelected && <Check className="w-3 h-3" />}
@@ -479,7 +479,7 @@ export const Settings = () => {
             {/* Submit */}
             <button
               type="submit"
-              className="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-bold py-3.5 rounded-xl transition-all duration-300 border border-brand-purple-light/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-brand-purple/10"
+              className="w-full bg-[#D4537E] hover:bg-[#c2436d] dark:bg-brand-purple dark:hover:bg-brand-purple-dark text-white font-bold py-3.5 rounded-xl transition-all duration-300 border border-transparent dark:border-brand-purple-light/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-[#D4537E]/10 dark:shadow-brand-purple/10"
               disabled={saving}
             >
               {saving ? (
@@ -538,23 +538,23 @@ export const Settings = () => {
           </div>
 
           {/* Push Notifications Card */}
-          <div className="glass-panel p-6 rounded-3xl border border-brand-purple/10 bg-brand-dark/15 flex flex-col gap-4">
+          <div className="glass-panel p-6 rounded-3xl border border-[#F4C0D1] dark:border-brand-purple/10 bg-white dark:bg-brand-dark/15 flex flex-col gap-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-brand-purple/10 border border-brand-purple/20">
+              <div className="p-2 rounded-xl bg-[#D4537E]/10 dark:bg-brand-purple/10 border border-[#D4537E]/20 dark:border-brand-purple/20">
                 {isSubscribed ? (
-                  <Bell className="w-5 h-5 text-brand-purple-light" />
+                  <Bell className="w-5 h-5 text-[#D4537E] dark:text-brand-purple-light" />
                 ) : (
-                  <BellOff className="w-5 h-5 text-slate-400" />
+                  <BellOff className="w-5 h-5 text-[#5F5E5A] dark:text-slate-400" />
                 )}
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-200">Push Notifications</h3>
-                <span className="text-[10px] text-slate-500 font-semibold uppercase">
+                <h3 className="text-sm font-bold text-[#2C2C2A] dark:text-slate-200">Push Notifications</h3>
+                <span className="text-[10px] text-[#5F5E5A] dark:text-slate-500 font-semibold uppercase">
                   {swSupported ? (isSubscribed ? 'Enabled' : 'Disabled') : 'Not Supported'}
                 </span>
               </div>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-[#5F5E5A] dark:text-slate-400 leading-relaxed">
               Get real-time updates when you receive connect requests or new direct messages.
             </p>
             
@@ -565,8 +565,8 @@ export const Settings = () => {
                 disabled={loadingPush}
                 className={`w-full font-bold py-3 rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-xs border ${
                   isSubscribed
-                    ? 'bg-brand-black/35 hover:bg-rose-500/10 text-slate-300 hover:text-rose-400 border-slate-800 hover:border-rose-500/30'
-                    : 'bg-brand-purple hover:bg-brand-purple-dark text-white border-brand-purple-light/20 shadow-md shadow-brand-purple/10'
+                    ? 'bg-[#FCEEF3] hover:bg-rose-500/10 text-[#2C2C2A] hover:text-rose-600 border-[#F4C0D1] dark:bg-brand-black/35 dark:text-slate-300 dark:hover:text-rose-400 dark:border-slate-800'
+                    : 'bg-[#D4537E] hover:bg-[#c2436d] dark:bg-brand-purple dark:hover:bg-brand-purple-dark text-white border-transparent dark:border-brand-purple-light/20 shadow-md shadow-[#D4537E]/10 dark:shadow-brand-purple/10'
                 }`}
               >
                 {loadingPush ? (
@@ -584,7 +584,7 @@ export const Settings = () => {
                 )}
               </button>
             ) : (
-              <div className="text-center text-xs font-semibold text-slate-500 py-2 border border-dashed border-slate-800 rounded-xl bg-brand-black/20">
+              <div className="text-center text-xs font-semibold text-[#5F5E5A] dark:text-slate-500 py-2 border border-dashed border-[#F4C0D1] dark:border-slate-800 rounded-xl bg-[#FCEEF3]/50 dark:bg-brand-black/20">
                 Service Worker not supported in this browser.
               </div>
             )}
@@ -592,19 +592,19 @@ export const Settings = () => {
 
           {/* Install App Card */}
           {!isAlreadyInstalled && (showInstallButton || showIosFallback) && (
-            <div className="glass-panel p-6 rounded-3xl border border-brand-purple/10 bg-brand-dark/15 flex flex-col gap-4">
+            <div className="glass-panel p-6 rounded-3xl border border-[#F4C0D1] dark:border-brand-purple/10 bg-white dark:bg-brand-dark/15 flex flex-col gap-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-brand-purple/10 border border-brand-purple/20">
-                  <Download className="w-5 h-5 text-brand-purple-light" />
+                <div className="p-2 rounded-xl bg-[#D4537E]/10 dark:bg-brand-purple/10 border border-[#D4537E]/20 dark:border-brand-purple/20">
+                  <Download className="w-5 h-5 text-[#D4537E] dark:text-brand-purple-light" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-200">Install App</h3>
-                  <span className="text-[10px] text-slate-500 font-semibold uppercase">
+                  <h3 className="text-sm font-bold text-[#2C2C2A] dark:text-slate-200">Install App</h3>
+                  <span className="text-[10px] text-[#5F5E5A] dark:text-slate-500 font-semibold uppercase">
                     PWA Support
                   </span>
                 </div>
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-[#5F5E5A] dark:text-slate-400 leading-relaxed">
                 Install Lynqo on your device for a fast, full-screen, native experience.
               </p>
               
@@ -612,29 +612,29 @@ export const Settings = () => {
                 <button
                   type="button"
                   onClick={handleInstallClick}
-                  className="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-bold py-3 rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-xs border border-brand-purple-light/20 shadow-md shadow-brand-purple/10"
+                  className="w-full bg-[#D4537E] hover:bg-[#c2436d] dark:bg-brand-purple dark:hover:bg-brand-purple-dark text-white font-bold py-3 rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-xs border border-transparent dark:border-brand-purple-light/20 shadow-md shadow-[#D4537E]/10 dark:shadow-brand-purple/10"
                 >
                   <Download className="w-4 h-4" />
                   <span>Install Lynqo</span>
                 </button>
               ) : showIosFallback ? (
-                <div className="text-slate-400 text-xs py-2 px-3 border border-brand-purple/15 rounded-xl bg-brand-purple/5 text-center font-medium leading-relaxed">
-                  On iPhone: tap <span className="text-brand-purple-light font-bold">Share</span>, then <span className="text-brand-purple-light font-bold">'Add to Home Screen'</span>
+                <div className="text-[#5F5E5A] dark:text-slate-400 text-xs py-2 px-3 border border-[#F4C0D1] dark:border-brand-purple/15 rounded-xl bg-[#FCEEF3]/50 dark:bg-brand-purple/5 text-center font-medium leading-relaxed">
+                  On iPhone: tap <span className="text-[#D4537E] dark:text-brand-purple-light font-bold">Share</span>, then <span className="text-[#D4537E] dark:text-brand-purple-light font-bold">'Add to Home Screen'</span>
                 </div>
               ) : null}
             </div>
           )}
 
           {/* Sidebar Log Out Card */}
-          <div className="glass-panel p-6 rounded-3xl border border-brand-purple/10 bg-brand-dark/15 flex flex-col gap-4">
-            <h3 className="text-sm font-bold text-slate-200">Account Actions</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+          <div className="glass-panel p-6 rounded-3xl border border-[#F4C0D1] dark:border-brand-purple/10 bg-white dark:bg-brand-dark/15 flex flex-col gap-4">
+            <h3 className="text-sm font-bold text-[#2C2C2A] dark:text-slate-200">Account Actions</h3>
+            <p className="text-xs text-[#5F5E5A] dark:text-slate-400 leading-relaxed">
               If you want to clear your current browser credentials and exit the workspace, log out below.
             </p>
             
             <button
               onClick={handleLogout}
-              className="w-full bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/25 font-bold py-3 rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-xs"
+              className="w-full bg-rose-500/10 hover:bg-rose-500 text-rose-600 hover:text-white dark:text-rose-400 dark:hover:text-white border border-rose-500/25 font-bold py-3 rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-xs"
             >
               <LogOut className="w-4 h-4" />
               <span>Log Out Session</span>

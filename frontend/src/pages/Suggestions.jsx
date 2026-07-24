@@ -204,11 +204,11 @@ export const Suggestions = () => {
     <div className="space-y-6 text-left relative">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-extrabold font-display text-slate-100 flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-brand-purple-light" />
+          <h2 className="text-2xl font-extrabold font-display text-[#2C2C2A] dark:text-slate-100 flex items-center gap-2">
+            <Sparkles className="w-6 h-6 text-[#D4537E] dark:text-brand-purple-light" />
             <span>Discover Matches</span>
           </h2>
-          <p className="text-slate-400 text-xs mt-1">
+          <p className="text-[#5F5E5A] dark:text-slate-400 text-xs mt-1">
             People nearby sharing similar interests who match your looking for settings.
           </p>
         </div>
@@ -234,7 +234,7 @@ export const Suggestions = () => {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                  className="glass-panel p-5 rounded-2xl border border-brand-purple/10 flex flex-col justify-between bg-brand-dark/20 hover:border-brand-purple/35 transition-all duration-300 group shadow-lg"
+                  className="glass-panel p-5 rounded-2xl border border-[#F4C0D1] dark:border-brand-purple/10 flex flex-col justify-between bg-white dark:bg-brand-dark/20 hover:border-[#D4537E]/40 dark:hover:border-brand-purple/35 transition-all duration-300 group shadow-lg"
                 >
                   <div>
                     {/* Header: Photo and Info */}
@@ -243,25 +243,25 @@ export const Suggestions = () => {
                         <img
                           src={pic}
                           alt={user.full_name}
-                          className="w-14 h-14 rounded-full object-cover border border-brand-purple/20 shadow-md flex-shrink-0"
+                          className="w-14 h-14 rounded-full object-cover border border-[#F4C0D1] dark:border-brand-purple/20 shadow-md flex-shrink-0"
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-full bg-brand-purple/20 flex items-center justify-center border border-brand-purple/20 text-brand-purple-light text-base font-bold uppercase flex-shrink-0">
+                        <div className="w-14 h-14 rounded-full bg-[#D4537E]/15 dark:bg-brand-purple/20 flex items-center justify-center border border-[#D4537E]/30 dark:border-brand-purple/20 text-[#D4537E] dark:text-brand-purple-light text-base font-bold uppercase flex-shrink-0">
                           {user.username.substring(0, 2)}
                         </div>
                       )}
                       <div>
-                        <h4 className="font-bold text-sm text-slate-200 group-hover:text-brand-purple-light transition-colors">
+                        <h4 className="font-bold text-sm text-[#2C2C2A] dark:text-slate-200 group-hover:text-[#D4537E] dark:group-hover:text-brand-purple-light transition-colors">
                           {user.full_name}
                         </h4>
-                        <div className="text-[10px] text-slate-500 font-semibold mt-0.5">@{user.username}</div>
+                        <div className="text-[10px] text-[#5F5E5A] dark:text-slate-500 font-semibold mt-0.5">@{user.username}</div>
                         
                         <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                          <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                          <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
                             <MapPin className="w-2.5 h-2.5" />
                             <span>{user.city}</span>
                           </span>
-                          <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                          <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
                             <Heart className="w-2.5 h-2.5" />
                             <span>{user.looking_for}</span>
                           </span>
@@ -270,7 +270,7 @@ export const Suggestions = () => {
                     </div>
 
                     {/* Bio */}
-                    <p className="text-[11px] text-slate-400 font-medium leading-relaxed mt-4 italic">
+                    <p className="text-[11px] text-[#5F5E5A] dark:text-slate-400 font-medium leading-relaxed mt-4 italic">
                       "{user.bio}"
                     </p>
 
@@ -279,13 +279,13 @@ export const Suggestions = () => {
                       {user.interests.slice(0, 4).map((interest) => (
                         <span
                           key={interest.id}
-                          className="text-[9px] font-bold bg-brand-black/50 border border-slate-800 text-slate-400 px-2 py-0.5 rounded-lg"
+                          className="text-[9px] font-bold bg-[#FCEEF3] dark:bg-brand-black/50 border border-[#F4C0D1] dark:border-slate-800 text-[#2C2C2A] dark:text-slate-400 px-2 py-0.5 rounded-lg"
                         >
                           {interest.name}
                         </span>
                       ))}
                       {user.interests.length > 4 && (
-                        <span className="text-[8px] font-extrabold text-slate-500 px-1.5 py-0.5">
+                        <span className="text-[8px] font-extrabold text-[#5F5E5A] dark:text-slate-500 px-1.5 py-0.5">
                           +{user.interests.length - 4} more
                         </span>
                       )}
@@ -294,7 +294,7 @@ export const Suggestions = () => {
 
                   <button
                     onClick={() => openConnectModal(user)}
-                    className="w-full mt-6 bg-brand-purple/20 hover:bg-brand-purple text-brand-purple-light hover:text-white border border-brand-purple/35 text-xs font-bold py-2.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer shadow-sm group-hover:scale-[1.01]"
+                    className="w-full mt-6 bg-[#D4537E]/15 hover:bg-[#D4537E] dark:bg-brand-purple/20 dark:hover:bg-brand-purple text-[#D4537E] hover:text-white dark:text-brand-purple-light dark:hover:text-white border border-[#D4537E]/30 dark:border-brand-purple/35 text-xs font-bold py-2.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer shadow-xs group-hover:scale-[1.01]"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Connect</span>
@@ -313,14 +313,14 @@ export const Suggestions = () => {
         title={`Connect with ${selectedUser?.full_name}`}
       >
         <div className="space-y-4">
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#5F5E5A] dark:text-slate-400">
             Send an invitation note to connect. Choose a reason to start your conversation.
           </p>
 
           <div className="flex flex-col gap-1.5 text-left">
-            <label className="text-xs font-semibold text-slate-400">Select Reason</label>
+            <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Select Reason</label>
             <select
-              className="glass-input p-3 rounded-xl text-sm w-full bg-brand-black/90"
+              className="glass-input p-3 rounded-xl text-sm w-full bg-white dark:bg-brand-black/90 text-[#2C2C2A] dark:text-slate-200"
               value={connectReason}
               onChange={(e) => setConnectReason(e.target.value)}
               disabled={sendingRequest}
@@ -334,14 +334,14 @@ export const Suggestions = () => {
           <div className="flex gap-3 justify-end mt-6">
             <button
               onClick={closeConnectModal}
-              className="px-4 py-2.5 rounded-xl text-xs font-bold bg-transparent text-slate-400 hover:text-slate-200 border border-slate-800 transition-all cursor-pointer"
+              className="px-4 py-2.5 rounded-xl text-xs font-bold bg-transparent text-[#5F5E5A] dark:text-slate-400 hover:text-[#2C2C2A] dark:hover:text-slate-200 border border-[#F4C0D1] dark:border-slate-800 transition-all cursor-pointer"
               disabled={sendingRequest}
             >
               Cancel
             </button>
             <button
               onClick={handleSendConnectRequest}
-              className="px-5 py-2.5 rounded-xl text-xs font-bold bg-brand-purple hover:bg-brand-purple-dark text-white border border-brand-purple-light/20 transition-all flex items-center gap-1.5 cursor-pointer"
+              className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#D4537E] hover:bg-[#c2436d] dark:bg-brand-purple dark:hover:bg-brand-purple-dark text-white border border-transparent dark:border-brand-purple-light/20 transition-all flex items-center gap-1.5 cursor-pointer"
               disabled={sendingRequest}
             >
               {sendingRequest ? (

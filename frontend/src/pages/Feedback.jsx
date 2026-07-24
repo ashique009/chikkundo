@@ -32,19 +32,19 @@ export const Feedback = () => {
   return (
     <div className="space-y-6 text-left max-w-xl mx-auto">
       <div>
-        <h2 className="text-2xl font-extrabold font-display text-slate-100 flex items-center gap-2">
-          <HeartHandshake className="w-6 h-6 text-brand-purple-light" />
+        <h2 className="text-2xl font-extrabold font-display text-[#2C2C2A] dark:text-slate-100 flex items-center gap-2">
+          <HeartHandshake className="w-6 h-6 text-[#D4537E] dark:text-brand-purple-light" />
           <span>Product Feedback</span>
         </h2>
-        <p className="text-slate-400 text-xs mt-1">
+        <p className="text-[#5F5E5A] dark:text-slate-400 text-xs mt-1">
           Tell us about your experience on Lynqo. We read all comments to refine our community circles.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-3xl border border-brand-purple/10 bg-brand-dark/15 space-y-6">
+      <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-3xl border border-[#F4C0D1] dark:border-brand-purple/10 bg-white dark:bg-brand-dark/15 space-y-6 transition-colors duration-200">
         {/* Rating Stars */}
-        <div className="flex flex-col gap-2 items-center text-center py-2 border-b border-slate-900">
-          <label className="text-xs font-semibold text-slate-400">Rate Your Experience</label>
+        <div className="flex flex-col gap-2 items-center text-center py-2 border-b border-[#F4C0D1] dark:border-slate-900">
+          <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Rate Your Experience</label>
           <div className="flex gap-1.5 mt-1">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
@@ -60,7 +60,7 @@ export const Feedback = () => {
                   className={`w-7 h-7 transition-colors ${
                     star <= (hoverRating || rating)
                       ? 'fill-amber-400 text-amber-400'
-                      : 'text-slate-700'
+                      : 'text-slate-300 dark:text-slate-700'
                   }`}
                 />
               </button>
@@ -70,7 +70,7 @@ export const Feedback = () => {
 
         {/* Subject */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-slate-400">Subject</label>
+          <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Subject</label>
           <input
             type="text"
             className="glass-input p-3 rounded-xl text-sm"
@@ -84,7 +84,7 @@ export const Feedback = () => {
 
         {/* Description */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-slate-400">Message Description</label>
+          <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Message Description</label>
           <textarea
             className="glass-input p-3 rounded-xl text-sm min-h-32 resize-none"
             placeholder="Write details about what we can improve..."
@@ -98,7 +98,7 @@ export const Feedback = () => {
         {/* Submit */}
         <button
           type="submit"
-          className="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-bold py-3.5 rounded-xl transition-all duration-300 border border-brand-purple-light/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-brand-purple/10"
+          className="w-full bg-[#D4537E] hover:bg-[#c2436d] dark:bg-brand-purple dark:hover:bg-brand-purple-dark text-white font-bold py-3.5 rounded-xl transition-all duration-300 border border-transparent dark:border-brand-purple-light/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-[#D4537E]/10 dark:shadow-brand-purple/10"
           disabled={submitting}
         >
           {submitting ? (

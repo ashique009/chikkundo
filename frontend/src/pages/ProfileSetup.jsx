@@ -118,18 +118,18 @@ export const ProfileSetup = () => {
 
   return (
     <div className="relative min-h-[calc(100vh-130px)] flex items-center justify-center py-6">
-      <div className="w-full max-w-2xl glass-panel p-6 md:p-10 rounded-3xl shadow-2xl bg-brand-dark/40 border border-brand-purple/20">
-        <h2 className="text-3xl font-bold font-display text-slate-100 mb-2">
+      <div className="w-full max-w-2xl glass-panel p-6 md:p-10 rounded-3xl shadow-2xl bg-white dark:bg-brand-dark/40 border border-[#F4C0D1] dark:border-brand-purple/20 transition-colors duration-200">
+        <h2 className="text-3xl font-bold font-display text-[#2C2C2A] dark:text-slate-100 mb-2">
           Setup Your Profile
         </h2>
-        <p className="text-slate-400 text-sm mb-8">
+        <p className="text-[#5F5E5A] dark:text-slate-400 text-sm mb-8">
           Tell us about yourself to find your perfect connection on Lynqo.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Avatar Upload */}
           <div className="flex flex-col items-center gap-4">
-            <div className="relative w-28 h-28 rounded-full border-2 border-dashed border-brand-purple/40 hover:border-brand-purple flex items-center justify-center overflow-hidden bg-brand-black/30 group transition-all duration-300">
+            <div className="relative w-28 h-28 rounded-full border-2 border-dashed border-[#D4537E]/40 hover:border-[#D4537E] dark:border-brand-purple/40 dark:hover:border-brand-purple flex items-center justify-center overflow-hidden bg-[#FCEEF3] dark:bg-brand-black/30 group transition-all duration-300">
               {picturePreview ? (
                 <img
                   src={picturePreview}
@@ -137,7 +137,7 @@ export const ProfileSetup = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="flex flex-col items-center justify-center text-slate-500 group-hover:text-brand-purple-light transition-colors">
+                <div className="flex flex-col items-center justify-center text-[#5F5E5A] dark:text-slate-500 group-hover:text-[#D4537E] dark:group-hover:text-brand-purple-light transition-colors">
                   <Upload className="w-6 h-6 mb-1" />
                   <span className="text-[10px] font-bold uppercase">Upload</span>
                 </div>
@@ -150,13 +150,13 @@ export const ProfileSetup = () => {
                 disabled={loading}
               />
             </div>
-            <span className="text-xs font-semibold text-slate-400">Profile Picture (Recommended)</span>
+            <span className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Profile Picture (Recommended)</span>
           </div>
 
           {/* Core Info Details */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-400">Date of Birth</label>
+              <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Date of Birth</label>
               <input
                 type="date"
                 className="glass-input p-3 rounded-xl text-sm w-full"
@@ -168,9 +168,9 @@ export const ProfileSetup = () => {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-400">Gender</label>
+              <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Gender</label>
               <select
-                className="glass-input p-3 rounded-xl text-sm w-full bg-brand-black/90"
+                className="glass-input p-3 rounded-xl text-sm w-full bg-white dark:bg-brand-black/90 text-[#2C2C2A] dark:text-slate-200"
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
                 disabled={loading}
@@ -183,9 +183,9 @@ export const ProfileSetup = () => {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-400">Looking For</label>
+              <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Looking For</label>
               <select
-                className="glass-input p-3 rounded-xl text-sm w-full bg-brand-black/90"
+                className="glass-input p-3 rounded-xl text-sm w-full bg-white dark:bg-brand-black/90 text-[#2C2C2A] dark:text-slate-200"
                 value={lookingFor}
                 onChange={(e) => setLookingFor(e.target.value)}
                 disabled={loading}
@@ -197,7 +197,7 @@ export const ProfileSetup = () => {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-400">City</label>
+              <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">City</label>
               <input
                 type="text"
                 className="glass-input p-3 rounded-xl text-sm"
@@ -213,7 +213,7 @@ export const ProfileSetup = () => {
           {/* Full Location */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
             <div className="md:col-span-2 flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-400">State</label>
+              <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">State</label>
               <input
                 type="text"
                 className="glass-input p-3 rounded-xl text-sm"
@@ -226,7 +226,7 @@ export const ProfileSetup = () => {
             </div>
             
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-400">Pincode</label>
+              <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Pincode</label>
               <input
                 type="text"
                 className="glass-input p-3 rounded-xl text-sm"
@@ -240,7 +240,7 @@ export const ProfileSetup = () => {
           </div>
 
           <div className="flex flex-col gap-1.5 text-left">
-            <label className="text-xs font-semibold text-slate-400">Full Address</label>
+            <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Full Address</label>
             <input
               type="text"
               className="glass-input p-3 rounded-xl text-sm"
@@ -253,7 +253,7 @@ export const ProfileSetup = () => {
 
           {/* Bio Description */}
           <div className="flex flex-col gap-1.5 text-left">
-            <label className="text-xs font-semibold text-slate-400">Short Bio</label>
+            <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400">Short Bio</label>
             <textarea
               className="glass-input p-3 rounded-xl text-sm min-h-24 resize-none"
               placeholder="Tell other members what you enjoy..."
@@ -266,24 +266,24 @@ export const ProfileSetup = () => {
 
           {/* Dynamic categorized Interests */}
           <div className="flex flex-col gap-3 text-left">
-            <div className="flex justify-between items-end border-b border-slate-800 pb-2">
-              <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            <div className="flex justify-between items-end border-b border-[#F4C0D1] dark:border-slate-800 pb-2">
+              <label className="text-xs font-semibold text-[#5F5E5A] dark:text-slate-400 uppercase tracking-wider">
                 Select Interests
               </label>
-              <span className="text-[10px] font-bold text-brand-purple-light uppercase">
+              <span className="text-[10px] font-bold text-[#D4537E] dark:text-brand-purple-light uppercase">
                 {selectedInterests.length} selected (Requires 3-10)
               </span>
             </div>
 
             {fetchingInterests ? (
-              <div className="flex justify-center py-6 text-slate-500 text-xs font-medium animate-pulse">
+              <div className="flex justify-center py-6 text-[#5F5E5A] dark:text-slate-500 text-xs font-medium animate-pulse">
                 Fetching interests list...
               </div>
             ) : (
               <div className="space-y-6 max-h-[300px] overflow-y-auto pr-2">
                 {Object.keys(groupedInterests).map((category) => (
                   <div key={category} className="space-y-2">
-                    <div className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest">
+                    <div className="text-[10px] font-extrabold text-[#5F5E5A] dark:text-slate-500 uppercase tracking-widest">
                       {category}
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -297,8 +297,8 @@ export const ProfileSetup = () => {
                             disabled={loading}
                             className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer border ${
                               isSelected
-                                ? 'bg-brand-purple text-white border-brand-purple-light shadow-md shadow-brand-purple/20'
-                                : 'bg-brand-black/40 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700'
+                                ? 'bg-[#D4537E] text-white border-transparent shadow-md dark:bg-brand-purple dark:border-brand-purple-light'
+                                : 'bg-[#FCEEF3] text-[#2C2C2A] dark:bg-brand-black/40 dark:text-slate-400 border-[#F4C0D1] dark:border-slate-800 hover:border-[#D4537E]'
                             }`}
                           >
                             {isSelected && <Check className="w-3.5 h-3.5" />}
@@ -316,7 +316,7 @@ export const ProfileSetup = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full mt-4 bg-gradient-to-r from-brand-purple to-indigo-600 hover:from-brand-purple-dark hover:to-indigo-700 text-white font-bold py-4 rounded-2xl transition-all duration-300 shadow-xl shadow-brand-purple/25 border border-brand-purple-light/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-4 bg-[#D4537E] hover:bg-[#c2436d] dark:bg-gradient-to-r dark:from-brand-purple dark:to-indigo-600 dark:hover:from-brand-purple-dark dark:hover:to-indigo-700 text-white font-bold py-4 rounded-2xl transition-all duration-300 shadow-xl shadow-[#D4537E]/20 dark:shadow-brand-purple/25 border border-transparent dark:border-brand-purple-light/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={loading}
           >
             {loading ? (

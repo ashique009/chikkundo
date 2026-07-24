@@ -106,20 +106,20 @@ export const ConnectRequests = () => {
   return (
     <div className="space-y-6 text-left">
       <div>
-        <h2 className="text-2xl font-extrabold font-display text-slate-100">Connect Invites</h2>
-        <p className="text-slate-400 text-xs mt-1">
+        <h2 className="text-2xl font-extrabold font-display text-[#2C2C2A] dark:text-slate-100">Connect Invites</h2>
+        <p className="text-[#5F5E5A] dark:text-slate-400 text-xs mt-1">
           Approve incoming connection notes to open secure dialogue chat lines.
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-900 pb-px gap-1">
+      <div className="flex border-b border-[#F4C0D1] dark:border-slate-900 pb-px gap-1">
         <button
           onClick={() => setActiveTab('received')}
           className={`px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
             activeTab === 'received'
-              ? 'border-brand-purple text-brand-purple-light'
-              : 'border-transparent text-slate-400 hover:text-slate-200'
+              ? 'border-[#D4537E] text-[#D4537E] dark:border-brand-purple dark:text-brand-purple-light'
+              : 'border-transparent text-[#5F5E5A] dark:text-slate-400 hover:text-[#2C2C2A] dark:hover:text-slate-200'
           }`}
         >
           Received ({receivedRequests.length})
@@ -128,8 +128,8 @@ export const ConnectRequests = () => {
           onClick={() => setActiveTab('sent')}
           className={`px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
             activeTab === 'sent'
-              ? 'border-brand-purple text-brand-purple-light'
-              : 'border-transparent text-slate-400 hover:text-slate-200'
+              ? 'border-[#D4537E] text-[#D4537E] dark:border-brand-purple dark:text-brand-purple-light'
+              : 'border-transparent text-[#5F5E5A] dark:text-slate-400 hover:text-[#2C2C2A] dark:hover:text-slate-200'
           }`}
         >
           Sent ({sentRequests.length})
@@ -160,26 +160,26 @@ export const ConnectRequests = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="glass-panel p-4 rounded-xl border border-brand-purple/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-brand-dark/15 hover:border-brand-purple/20 transition-all duration-200"
+                  className="glass-panel p-4 rounded-xl border border-[#F4C0D1] dark:border-brand-purple/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-brand-dark/15 hover:border-[#D4537E]/30 dark:hover:border-brand-purple/20 transition-all duration-200"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-brand-purple/10 flex items-center justify-center border border-brand-purple/20 text-brand-purple-light text-xs font-extrabold uppercase flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-[#D4537E]/15 dark:bg-brand-purple/10 flex items-center justify-center border border-[#D4537E]/30 dark:border-brand-purple/20 text-[#D4537E] dark:text-brand-purple-light text-xs font-extrabold uppercase flex-shrink-0">
                       {activeTab === 'received' 
                         ? req.sender_username.substring(0, 2)
                         : req.receiver_username.substring(0, 2)}
                     </div>
                     
                     <div>
-                      <div className="text-sm font-bold text-slate-200">
+                      <div className="text-sm font-bold text-[#2C2C2A] dark:text-slate-200">
                         {activeTab === 'received' ? (
-                          <span>Invitation from <strong className="text-brand-purple-light font-bold">@{req.sender_username}</strong></span>
+                          <span>Invitation from <strong className="text-[#D4537E] dark:text-brand-purple-light font-bold">@{req.sender_username}</strong></span>
                         ) : (
-                          <span>Invitation to <strong className="text-indigo-400 font-bold">@{req.receiver_username}</strong></span>
+                          <span>Invitation to <strong className="text-indigo-600 dark:text-indigo-400 font-bold">@{req.receiver_username}</strong></span>
                         )}
                       </div>
                       
-                      <div className="flex items-center gap-1.5 mt-1.5 text-xs text-slate-400 font-medium">
-                        <FileText className="w-3.5 h-3.5 text-slate-500" />
+                      <div className="flex items-center gap-1.5 mt-1.5 text-xs text-[#5F5E5A] dark:text-slate-400 font-medium">
+                        <FileText className="w-3.5 h-3.5 text-[#5F5E5A] dark:text-slate-500" />
                         <span>Note: "{req.reason_display}"</span>
                       </div>
                     </div>
@@ -192,7 +192,7 @@ export const ConnectRequests = () => {
                         <button
                           onClick={() => handleDecline(req.id, req.sender_username)}
                           disabled={actionLoadingId !== null}
-                          className="p-2.5 rounded-xl border border-slate-800 text-slate-400 hover:text-rose-400 hover:bg-rose-500/5 transition-all cursor-pointer flex items-center justify-center"
+                          className="p-2.5 rounded-xl border border-[#F4C0D1] dark:border-slate-800 text-[#5F5E5A] dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-500/5 transition-all cursor-pointer flex items-center justify-center"
                           title="Decline"
                         >
                           <X className="w-4 h-4" />
@@ -200,7 +200,7 @@ export const ConnectRequests = () => {
                         <button
                           onClick={() => handleAccept(req.id, req.sender_username)}
                           disabled={actionLoadingId !== null}
-                          className="px-4 py-2 rounded-xl bg-brand-purple hover:bg-brand-purple-dark text-white border border-brand-purple-light/20 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-md shadow-brand-purple/10"
+                          className="px-4 py-2 rounded-xl bg-[#D4537E] hover:bg-[#c2436d] dark:bg-brand-purple dark:hover:bg-brand-purple-dark text-white border border-transparent dark:border-brand-purple-light/20 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-md shadow-[#D4537E]/10 dark:shadow-brand-purple/10"
                         >
                           {actionLoadingId === req.id ? (
                             <div className="w-3.5 h-3.5 rounded-full border-2 border-white/20 border-t-white animate-spin"></div>
